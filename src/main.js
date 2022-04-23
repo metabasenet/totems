@@ -64,7 +64,8 @@ Vue.prototype.$api = api;
 // //定义staffapi全局变量
 // import staffapi from './request/staffapi';
 // Vue.prototype.$staffapi = staffapi;
-
+import Web3 from 'web3'
+Vue.prototype.Web3 = Web3
 
 new Vue({
     store,
