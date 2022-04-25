@@ -1,37 +1,30 @@
 <template>
-  <div class="p-home">
-    <div class="page-network">
-      <div>
-        <el-tabs
-          v-model="usable"
-          :tab-position="tabPosition"
-          @tab-click="handleClick"
-        >
-          <el-tab-pane
-            v-for="(tab, index) in tabs"
-            :key="index"
-            :name="tab.name"
-            :label="tab.label"
-          >
+  <el-container>
+
+    <el-main> 
+        <el-tabs  v-model="usable" :tab-position="tabPosition" @tab-click="handleClick"  >
+          <el-tab-pane v-for="(tab, index) in tabs" :key="index"   :name="tab.name"  :label="tab.label">
             <div v-show="usable === '1'">
-              <div>From: MNT</div>
-              <el-input
-                v-model="mntSwap"
-                type="number"
-                placeholder="please input MNT value"
-              ></el-input>
-              <div>To: USDT</div>
-              <el-input
-                v-model="usdtSwap"
-                type="number"
-                placeholder="please input MNT value"
-              ></el-input>
-              <br />
-              <el-button type="primary" @click="postFlutterInfo()"
-                >postFlutterInfo</el-button
-              >
-              <el-button type="primary" @click="refresh()">refresh</el-button>
-              <el-button type="primary" @click="getPrice()">getPrice</el-button>
+              <el-row>
+                 <el-col :span="24">
+                    <div id ="mntSwapDiv">
+                      <div class="fl"><span v-if="mntFromTo == 1">From</span><span v-else>To</span>: MNT</div>
+                      <el-input  v-model="mntSwap"   type="number"  placeholder="please input swap MNT value"></el-input>
+                    </div>
+                    <div id="swapButton" class="fr top10">
+                      <el-button type="primary" @click="exchange()" >exchange</el-button>
+                    </div>
+                    <div id ="usdtSwapDiv">
+                    <div class="fl"><span v-if="usdtFromTo == 1">From</span><span v-else>To</span>: USDT</div>
+                      <el-input  v-model="usdtSwap" type="number"  placeholder="please input swap MNT value" ></el-input>
+                    </div>
+                    <div class="fr top10">
+                      <!--<el-button type="primary" @click="postFlutterInfo()">postFlutterInfo</el-button  >-->
+                      <el-button type="primary" @click="swapExactTokensForTokens()">Commit</el-button>
+                    </div>
+                 </el-col>
+              </el-row>
+       
             </div>
             <div v-show="usable === '2'">
               <h1>Liquidity</h1>
@@ -44,41 +37,47 @@
             </div>
           </el-tab-pane>
         </el-tabs>
-      </div>
-    </div>
-    <el-row :gutter="20" class="footer_wrap">
-      <el-col :span="12">
-        <div class="grid-content bg-purple">
-          <p>
-            MNT: <span>{{ mnt }}</span>
-          </p>
-          <p>
-            USDT: <span>{{ usdt }}</span>
-          </p>
-          <p>
-            LP: <span>{{ lp }}</span>
-          </p>
-        </div>
-      </el-col>
-      <el-col :span="12">
-        <div class="grid-content bg-purple">
-          <p>
-            Total MNT: <span>{{ mntTotal }}</span>
-          </p>
-          <p>
-            Total USDT: <span>{{ usdtTotal }}</span>
-          </p>
-          <p>
-            <span>333{{ priceRate }}</span
-            >&nbsp;<span>{{ skill }}</span>
-          </p>
-        </div>
-      </el-col>
-    </el-row>
-  </div>
+    </el-main>
+    <el-footer style="height:auto;">    
+      <el-row :gutter="20" class="" style="margin:0;">
+        <el-col :span="12">
+          <div class="grid-content bg-purple">
+            <p>
+              MNT: <span>{{ mnt }}</span>
+            </p>
+            <p>
+              USDT: <span>{{ usdt }}</span>
+            </p>
+            <p>
+              LP: <span>{{ lp }}</span>
+            </p>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="grid-content bg-purple">
+            <p>
+              Pool MNT: <span>{{ mntPool }}</span>
+            </p>
+            <p>
+              Pool USDT: <span>{{ usdtPool }}</span>
+            </p>
+            <p>
+              <span>{{ mntToUsdtRate }}</span>
+            </p>
+            <p>
+              <span>{{ usdtToMntRate }}</span>
+            </p>
+            <p><span>{{skill}}</span></p>
+          </div>
+        </el-col>
+      </el-row>
+    </el-footer>
+  </el-container>
 </template>
 
 <script>
+import BigNumber from 'bignumber.js';
+BigNumber.config({DECIMAL_PLACES:4,ROUNDING_MODE:5})
 export default {
   data() {
     return {
@@ -90,12 +89,14 @@ export default {
         { name: "3", label: "Remove" },
         { name: "4", label: "Trend" },
       ],
-      mntSwap: "",
-      usdtSwap: "",
-      usdt_addr: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",
+      mntSwap: new BigNumber(),
+      usdtSwap: new BigNumber(),
       mnt_addr: "0x450af0a7c8372eee72dd2e4833d9aac4928c151f",
+      usdt_addr: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",
       lp_addr: "0x82260d3f8c98e90a4ec0dcf709e2ad8f592ea941",
       client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9",
+      uniswap_addr : "0x9ac64cc6e4415144c455bd8e4837fea55603e5c3",
+      privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
       abi: [
         {
@@ -243,13 +244,23 @@ export default {
           type: "event",
         },
       ],
-      mnt: "",
-      usdt: "",
-      lp: "",
-      mntTotal: "",
-      usdtTotal: "",
+      mnt: new BigNumber(),
+      usdt: new BigNumber(),
+      lp: new BigNumber(),
+      mntPool: new BigNumber(),
+      usdtPool: new BigNumber(),
       skill: "",
-      priceRate: "yyyy",
+      mntToUsdtRate: new BigNumber(),
+      usdtToMntRate: new BigNumber(),
+      _reserve0:new BigNumber(),
+      _reserve1:new BigNumber(),
+      ROUNDING_MODE:5,  //Default ROUNDING_MODE
+      calculationOnce:true,
+      exchangeState:true,
+      mntFromTo:1,
+      usdtFromTo:0,
+
+
     };
   },
   methods: {
@@ -257,7 +268,7 @@ export default {
       console.log(tab);
     },
     getAddress(client_addr, contractAddress, type) {
-      let BigNumber = require("bignumber.js");
+      //let BigNumber = require("bignumber.js");
       let Ether = new BigNumber(10e17);
       let web3 = new this.Web3(this.url);
       let web3Contract = new web3.eth.Contract(this.abi, contractAddress);
@@ -265,13 +276,12 @@ export default {
         .balanceOf(client_addr)
         .call()
         .then((v) => {
-          console.log(v);
+          
           let ret = new BigNumber(v);
-          let value = parseFloat(ret.dividedBy(Ether)).toFixed(5);
+          let value = new BigNumber(ret/Ether).toFixed(this.ROUNDING_MODE); 
           switch (type) {
             case 1:
-              this.mnt = value;
-              console.log(this.mnt);
+              this.mnt = value;               
               break;
             case 2:
               this.usdt = value;
@@ -280,21 +290,21 @@ export default {
               this.lp = value;
               break;
             case 4:
-              this.mntTotal = value;
+              this.mntPool = value;
               break;
             case 5:
-              this.usdtTotal = value;
+              this.usdtPool = value;
 
               break;
           }
         })
         .then((sum) => {
-          console.log(sum);
+          //console.log(sum);
         });
-      console.log("sss");
+     
     },
-    async getPrice() {
-      this.priceRate = "22222";
+    getPriceRate() {
+ 
       let web3 = new this.Web3(this.url);
       let priceAbi = [
         {
@@ -354,22 +364,18 @@ export default {
         },
       ];
       let web3Contract = new web3.eth.Contract(priceAbi, this.lp_addr);
-      let abc = await web3Contract.methods.getReserves().call(/*function (error, result) {
-        
-        if (error) {
-          console.log(error);
-        } else {
-          console.log("7777", result);
+      web3Contract.methods.getReserves().call((error,result)=>{
 
-          let ret = parseInt(result._reserve1) / parseInt(result._reserve0);
+        this._reserve0=new BigNumber(result._reserve0);
+        this._reserve1=new BigNumber(result._reserve1);
+        this.mntToUsdtRate=new BigNumber(new BigNumber( this._reserve1)/new BigNumber( this._reserve0));
+        this.usdtToMntRate=new BigNumber(new BigNumber(this._reserve0)/new BigNumber( this._reserve1));
+        //console.log('_reserve0',result._reserve0);
+        //console.log('_reserve1',result._reserve1);
 
-          // this.priceRate=ret.toString();
-          this.priceRate = "1111111";
-          console.log("999999", this.priceRate);
-        }
-      }*/);
-      this.priceRate =  abc._reserve1;
-      console.log(abc);
+      });
+      //this.priceRate =  abc._reserve1;
+      //console.log(abc);
     },
     getFlatterInfo() {
       window.addEventListener(
@@ -395,10 +401,102 @@ export default {
     },
     refresh() {
       window.location.reload();
+    },   
+    exchange(){
+      this.exchangeState=!this.exchangeState;
+ 
+      if (!this.exchangeState){
+        this.$el.querySelector("#swapButton").before(this.$el.querySelector("#usdtSwapDiv"));
+        this.$el.querySelector("#swapButton").after(this.$el.querySelector("#mntSwapDiv"));
+        this.mntFromTo=0;
+        this.usdtFromTo=1;
+      }else{
+        this.$el.querySelector("#swapButton").after(this.$el.querySelector("#usdtSwapDiv"));
+        this.$el.querySelector("#swapButton").before(this.$el.querySelector("#mntSwapDiv"));
+        this.mntFromTo=1;
+        this.usdtFromTo=0;
+      }
+     
     },
+    swapExactTokensForTokens(){
+      let Tx= require('ethereumjs-tx').Transaction;
+      //let Tx= require('ethereumjs-tx');
+      let Common = require('ethereumjs-common').default;
+      let web3 = new this.Web3(this.url);
+      let abi = [{
+        "inputs": [{
+            "internalType": "uint256",
+            "name": "amountIn",
+            "type": "uint256"
+        }, {
+            "internalType": "uint256",
+            "name": "amountOutMin",
+            "type": "uint256"
+        }, {
+            "internalType": "address[]",
+            "name": "path",
+            "type": "address[]"
+        }, {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+        }, {
+            "internalType": "uint256",
+            "name": "deadline",
+            "type": "uint256"
+        }],
+        "name": "swapExactTokensForTokens",
+        "outputs": [{
+            "internalType": "uint256[]",
+            "name": "amounts",
+            "type": "uint256[]"
+        }],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }];
+      let privKey = new Buffer.from(this.privateKey, 'hex');
+      let con=new web3.eth.Contract(abi,this.con_addr);
+      let swapValue=this.mntSwap;
+      if(this.mntFromTo ==0){swapValue=this.usdtSwap;}
+      let amountIn= BigNumber(BigNumber(10**18) * swapValue);
+      let amountOutMin=BigNumber(0);
+      console.log("swapValue" ,swapValue);
+      let path=[this.mnt_addr,this.usdt_addr]; //mnt swap usdt
+      if(this.mntFromTo ==0){
+        path=[this.usdt_addr,this.mnt_addr];//usdt swap mnt
+      }
+      console.log("path" ,path);
+      let to=this.client_addr;
+      let deadline=BigNumber(Math.floor(Date.now()/1000)+100);
+
+  console.log('encodeABI',con.methods.swapExactTokensForTokens(amountIn,amountOutMin,path,to,deadline).encodeABI);
+      web3.eth.getTransactionCount(to,(err,txCount)=>{
+          const txObject={
+          nonce: web3.utils.toHex(txCount),
+          gasLimit:web3.utils.toHex(150000),
+          gasPrice:web3.utils.toHex(web3.utils.toWei('10','Gwei')),
+          to:this.uniswap_addr,  
+          data:con.methods.swapExactTokensForTokens(amountIn,amountOutMin,path,to,deadline).encodeABI()
+        }
+             console.log("txObject",txObject); 
+        let BSC_MAIN=Common.forCustomChain('mainnet',{name:'bnb',networkId:97,chainId:97},'petersburg');       
+        let tx=new Tx(txObject,{common:BSC_MAIN});
+        console.log('tx',tx);
+        tx.sign(privKey);
+        const serializedTx=tx.serialize();
+        console.log('tx2',tx);
+        let raw='0x'+serializedTx.toString('hex');
+        console.log('raw',raw);
+        web3.eth.sendSignedTransaction(raw,(err,txHash)=>{
+          console.log('err:',err,'txHash:',txHash);
+        })
+        
+      });
+    }
+
   },
   mounted() {
-    this.getPrice();
+    this.getPriceRate();
     this.getFlatterInfo();
     this.getAddress(this.client_addr, this.mnt_addr, 1);
     this.getAddress(this.client_addr, this.usdt_addr, 2);
@@ -406,6 +504,45 @@ export default {
     this.getAddress(this.lp_addr, this.mnt_addr, 4);
     this.getAddress(this.lp_addr, this.usdt_addr, 5);
   },
+  computed:{
+    mntToUsdtSwap(){
+      const{mntSwap}=this
+      return {mntSwap}
+    },
+    usdtToMntSwap(){
+      const{usdtSwap}=this
+      return {usdtSwap}
+    }
+  },
+  watch:{
+    mntToUsdtSwap(val){
+      //console.log('1111', parseFloat(val.mntSwap));
+      //console.log('2222', parseFloat(this.mntToUsdtRate));
+      if (this.calculationOnce){
+        this.calculationOnce=false;
+        let amountInWithFee=new BigNumber(val.mntSwap) * 998;
+        let numerator=new BigNumber(amountInWithFee)* this._reserve1;
+        let denominator=(new BigNumber( this._reserve0) * 1000 ) +amountInWithFee;
+        this.usdtSwap= new BigNumber(numerator/denominator).toFixed(this.ROUNDING_MODE); 
+      }else{
+        this.calculationOnce=true;
+      } 
+    },
+    usdtToMntSwap(val){
+      //console.log('33333', parseFloat(val.usdtSwap));
+     // console.log('44444', parseFloat(this.usdtToMntRate));
+      if (this.calculationOnce){
+        this.calculationOnce=false;
+        let amountInWithFee=new BigNumber(val.usdtSwap) * 998;
+        let numerator=new BigNumber(amountInWithFee)* this._reserve0;
+        let denominator=(new BigNumber( this._reserve1) * 1000 ) +amountInWithFee;
+        this.mntSwap= new BigNumber(numerator/denominator).toFixed(this.ROUNDING_MODE);   
+      }else{
+        this.calculationOnce=true;
+      }
+    }
+  },
+ 
 };
 </script>
 
@@ -421,7 +558,7 @@ export default {
   background-color: #fff;
 }
 .el-tabs {
-  padding-left: 10px;
+  /*padding-left: 10px;*/
 }
 .el-row {
   margin-bottom: 20px;
@@ -437,6 +574,12 @@ export default {
   border-radius: 4px;
   min-height: 36px;
 }
+.el-main {
+    color: #333;
+    text-align: center;
+  
+    padding:15px;
+  }
 .row-bg {
   padding: 10px 0;
   background-color: #f9fafc;
@@ -460,4 +603,20 @@ export default {
 .footer_wrap p span {
   color: blue;
 }
+.el-footer {
+    padding: 0;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    background-color: rgb(179, 216, 255);
+    height: auto;
+
+}
+.el-footer p span {
+  color: blue;
+}
+.el-tabs__item.is-top{font-size:18px;}
+.fl{text-align: left;}
+.fr{text-align: right;}
+.center{text-align: center;}
+.top10{padding-top:10px;}
 </style>

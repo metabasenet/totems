@@ -8,10 +8,24 @@ const routes = [
         meta: {
             parent: "",
             needLogin: false,
-            title: "$t('routes.browser')"
+            title: "totems"
         },
         component: () =>
             import("../views/Home/main.vue"),
+        children: [
+            
+        ]
+    },
+    {
+        path: "/test",
+        name: "main",
+        meta: {
+            parent: "",
+            needLogin: false,
+            title: "$t('routes.browser')"
+        },
+        component: () =>
+            import("../views/Home/test.vue"),
         children: [
             
         ]
