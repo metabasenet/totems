@@ -64,10 +64,11 @@
             <p>
               <span>{{ mntToUsdtRate }}</span>
             </p>
+            <p><span>{{skill}}</span></p>
             <p>
               <span>{{ usdtToMntRate }}</span>
             </p>
-            <p><span>{{skill}}</span></p>
+       
           </div>
         </el-col>
       </el-row>
@@ -383,7 +384,7 @@ export default {
         function (event) {
           window.flutter_inappwebview
             .callHandler("haha")
-            .then(function (result) {
+            .then((result)=>{
               alert(result["skill"]);
               this.skill = result["skill"];
             });
@@ -458,18 +459,18 @@ export default {
       let con=new web3.eth.Contract(abi,this.con_addr);
       let swapValue=this.mntSwap;
       if(this.mntFromTo ==0){swapValue=this.usdtSwap;}
-      let amountIn= BigNumber(BigNumber(10**18) * swapValue);
-      let amountOutMin=BigNumber(0);
-      console.log("swapValue" ,swapValue);
+      //let amountIn=new BigNumber(10**18 * swapValue);
+      let amountIn = web3.utils.toWei(swapValue,'ether');
+      //let amountIn= 10**18 * swapValue; 
+      let amountOutMin=web3.utils.toWei('0','ether');
+     //let amountOutMin=0;
       let path=[this.mnt_addr,this.usdt_addr]; //mnt swap usdt
       if(this.mntFromTo ==0){
         path=[this.usdt_addr,this.mnt_addr];//usdt swap mnt
-      }
-      console.log("path" ,path);
+      }      
       let to=this.client_addr;
-      let deadline=BigNumber(Math.floor(Date.now()/1000)+100);
-
-  console.log('encodeABI',con.methods.swapExactTokensForTokens(amountIn,amountOutMin,path,to,deadline).encodeABI);
+      //let deadline=new BigNumber(Math.floor(Date.now()/1000)+1200);
+      let deadline=web3.utils.toHex(Math.floor(Date.now()/1000)+1200);
       web3.eth.getTransactionCount(to,(err,txCount)=>{
           const txObject={
           nonce: web3.utils.toHex(txCount),
@@ -477,16 +478,12 @@ export default {
           gasPrice:web3.utils.toHex(web3.utils.toWei('10','Gwei')),
           to:this.uniswap_addr,  
           data:con.methods.swapExactTokensForTokens(amountIn,amountOutMin,path,to,deadline).encodeABI()
-        }
-             console.log("txObject",txObject); 
+        }    
         let BSC_MAIN=Common.forCustomChain('mainnet',{name:'bnb',networkId:97,chainId:97},'petersburg');       
-        let tx=new Tx(txObject,{common:BSC_MAIN});
-        console.log('tx',tx);
+        let tx=new Tx(txObject,{common:BSC_MAIN});  
         tx.sign(privKey);
-        const serializedTx=tx.serialize();
-        console.log('tx2',tx);
-        let raw='0x'+serializedTx.toString('hex');
-        console.log('raw',raw);
+        const serializedTx=tx.serialize();       
+        let raw='0x'+serializedTx.toString('hex');   
         web3.eth.sendSignedTransaction(raw,(err,txHash)=>{
           console.log('err:',err,'txHash:',txHash);
         })
