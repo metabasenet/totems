@@ -1,5 +1,8 @@
-# HAH-BROWSER
-
+# MNT-BROWSER
+```bash
+sudo npm install -g @vue/cli@4.5.0
+vue create totems
+```
 ## Project setup
 ```
 npm install
