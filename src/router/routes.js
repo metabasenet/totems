@@ -18,14 +18,28 @@ const routes = [
     },
     {
         path: "/test",
-        name: "main",
+        name: "test",
         meta: {
-            parent: "",
+            parent: "Home",
             needLogin: false,
             title: "$t('routes.browser')"
         },
         component: () =>
             import("../views/Home/test.vue"),
+        children: [
+            
+        ]
+    },
+    {
+        path: "/chart",
+        name: "chart",
+        meta: {
+            parent: "Home",
+            needLogin: false,
+            title: "$t('routes.browser')"
+        },
+        component: () =>
+            import("../views/Home/chart.vue"),
         children: [
             
         ]

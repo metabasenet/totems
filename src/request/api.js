@@ -8,4 +8,7 @@ export default {
         return baseGet("/newblock/", params);
     }
     */
+    getUniswap(params){
+        return baseGet("/getUniswap", params);
+    }
 }
