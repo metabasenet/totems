@@ -21,9 +21,14 @@
                     <div class="fr top10">
                       <!--<el-button type="primary" @click="postFlutterInfo()">postFlutterInfo</el-button  >-->
                      <!-- <el-button type="primary" @click="swapExactTokensForTokensByPassword()">Commit</el-button>-->
-                      <el-button type="primary" @click="swapExactTokensForTokens()">Commit</el-button>
-                         <el-button type="primary" @click="postPassword()">password</el-button>
+                      <el-button type="primary" @click="postPassword()">Commit</el-button>
+                       <!--<el-button type="primary" @click="Transfer('0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8','','0.01',1)">Transfer</el-button>  
+          
+                      <el-button type="primary" @click="Transfer('0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8','0x450af0a7c8372eee72dd2e4833d9aac4928c151f','0.1',2)">Transfer</el-button>  
+                --> 
+                <el-button type="primary" @click="Transfer('0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8','0xb7f04aefa2612a8321618af162fe8d90aa087e45','0.1',3)">Transfer</el-button>  
                 
+
                       
                       
                        <!-- <el-button type="text" @click="inputPassword()">Message Box</el-button>-->
@@ -45,7 +50,9 @@
                       <el-input  v-model="usdtLiquidity" type="number"  placeholder="please input liquidity USDT value" ></el-input>
                     </div>
                     <div class="fr top10">
-                      <el-button type="primary" @click="addLiquidity()">Commit</el-button>                      
+                            
+                      <el-button type="primary" @click="addLiquidity()">Commit</el-button>     
+                             
                     </div>
                 </el-col>
               </el-row>
@@ -97,7 +104,21 @@
                <p>
                 BNB:<span v-if="!isNaN(bnb)">{{bnb}}</span>
               </p>
-              <p><span v-if="!isNaN(swapState)">{{swapState}}</span></p>
+              <p>
+                <span v-if="!isNaN(swapState)">{{swapState}}</span>
+              </p>
+              <p>
+                 _reserve0:<span>{{_reserve0}}</span>
+              </p>
+                <p>
+                 _reserve1:<span>{{_reserve1}}</span>
+              </p>
+              <p>
+                mntApprove:<span>{{mntApprove}}</span>
+                </p>
+                <p>
+                usdtApprove:<span>{{usdtApprove}}</span>
+                </p>
             </div>
           </el-col>
           <el-col :span="12">
@@ -173,12 +194,15 @@ export default {
       approveInfo:"",// 授权信息
       mnt_addr: "0x450af0a7c8372eee72dd2e4833d9aac4928c151f",
       usdt_addr: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",
-      lp_addr: "0x82260d3f8c98e90a4ec0dcf709e2ad8f592ea941",  //account 1
-      client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 2
-      //client_addr: "0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8",  // 
-      uniswap_addr : "0x9ac64cc6e4415144c455bd8e4837fea55603e5c3",
-      privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
+      lp_addr: "0x82260d3f8c98e90a4ec0dcf709e2ad8f592ea941", 
+      client_addr:"",
+      //client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
+      //client_addr: "0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8",  //account 2
+      privateKey:"",
+      //privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
       //privateKey:"a0f4220b3ce3fce01080371af0d924341d52767b25c2abaea3d44c18ae67845b",
+      uniswap_addr : "0x9ac64cc6e4415144c455bd8e4837fea55603e5c3",
+
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
      
       DOMAIN_SEPARATOR :"0xd010526b15a49fbab086ffd91b78ef60d6bdb7037f5d98ba83de33b8fb33c43c",
@@ -271,12 +295,10 @@ export default {
         });
      
     },
-    getPriceRate() { 
-     
+    getPriceRate() {       
       let priceAbi = [ { constant: true, inputs: [], name: "getReserves", outputs: [ { internalType: "uint112", name: "_reserve0", type: "uint112", }, { internalType: "uint112", name: "_reserve1", type: "uint112", }, { internalType: "uint32", name: "_blockTimestampLast", type: "uint32", }, ], payable: false, stateMutability: "view", type: "function", }, { constant: true, inputs: [], name: "token0", outputs: [ { internalType: "address", name: "", type: "address", }, ], payable: false, stateMutability: "view", type: "function", }, { constant: true, inputs: [], name: "token1", outputs: [ { internalType: "address", name: "", type: "address", }, ], payable: false, stateMutability: "view", type: "function", }, ];
       let web3Contract = new this.web3.eth.Contract(priceAbi, this.lp_addr);
-      web3Contract.methods.getReserves().call((error,result)=>{
-
+      web3Contract.methods.getReserves().call((error,result)=>{ 
         this._reserve0=new BigNumber(result._reserve0);
         this._reserve1=new BigNumber(result._reserve1);
         this.mntToUsdtRate=new BigNumber(new BigNumber( this._reserve1)/new BigNumber( this._reserve0)).toFixed(this.ROUNDING_MODE); ;
@@ -289,24 +311,21 @@ export default {
         "flutterInAppWebViewPlatformReady",
         (event) => {
           window.flutter_inappwebview
-            .callHandler("haha1")
-            .then((result)=>{
-              this.skill = result["skill"];          
-              alert(result["skill"]);      
+            .callHandler("init")
+            .then((result)=>{             
+              this.client_addr = result["Address"];     
+              //this.privateKey=result["PrivateKey"]; 
+              alert(this.client_addr);
+              this.$options.methods.init.call(this);
+            
             });
         }
       );
-      window.addEventListener(
-        "flutterInAppWebViewPlatformReady",
-        (event) => {
-          window.flutter_inappwebview
-            .callHandler("haha")
-            .then((result)=>{
-              this.skill = result;          
-              alert(result);      
-            });
-        }
-      );
+      window.addEventListener("Transfer", (event) => {           
+            alert(JSON.stringify(event.detail));
+            //{token: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",addr:"0x87391240190aB94F43a1365bBDe1610D6b61E2B5",amount:123.123}
+   
+        });
 
 
 
@@ -345,14 +364,14 @@ export default {
         cancelButtonText: 'Cancel',
         inputPattern: /[\s\S]*/,
         inputErrorMessage: 'Format error!'
-      }).then(({ value }) => {
-      
+      }).then(({ value }) => {      
         
         this.$message({
           type: 'success',
           message: 'Your wallet password is: ' + value
         });
-          this.passwordInput=value;    
+          //this.passwordInput=value; 
+          //alert(value);   
         if (this.passwordInput !=this.password){
         alert("Password error"); return;}
         else{
@@ -366,30 +385,38 @@ export default {
         });       
       });
     },
-    async swapExactTokensForTokens(){
+    postPassword(){
       let passwordInput = prompt('');
-      if(passwordInput != this.password){
-        alert("lease enter the correct wallet password!");
-        return;
-      } 
+      if (passwordInput == null || passwordInput.trim() ==''){
+        alert("Please enter the correct wallet password!");
+        return ;
+      }
+        window.flutter_inappwebview.callHandler('verify', passwordInput).then((result)=>{
+          alert(JSON.stringify(result));
+          if( result !=null && result !=""){
+            //this.swapExactTokensForTokens();
+          }else{
+            alert("Please enter the correct wallet password!");
+          }
+        });
+ 
+    },
+    async swapExactTokensForTokens(){
+    
       let abi = [{ "inputs": [{ "internalType": "uint256", "name": "amountIn", "type": "uint256" }, { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" }, { "internalType": "address[]", "name": "path", "type": "address[]" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "deadline", "type": "uint256" }], "name": "swapExactTokensForTokens", "outputs": [{ "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" }], "stateMutability": "nonpayable", "type": "function" }];
       let privKey = new Buffer.from(this.privateKey, 'hex');   
       let con=new this.web3.eth.Contract(abi,this.con_addr);
       let swapValue=this.mntSwap;
       if(this.mntFromTo ==0){swapValue=this.usdtSwap;}
-      //let amountIn=new BigNumber(10**18 * swapValue);
       let amountIn = this.web3.utils.toWei(new BigNumber(swapValue).toString(),'ether');
-      //let amountIn= 10**18 * swapValue; 
       let swapoutValue=this.usdtSwap;
       if(this.mntFromTo ==0){swapoutValue=this.mntSwap;}
       let amountOutMin=this.web3.utils.toWei(new BigNumber(swapoutValue * this.slippageTolerance).toString(),'ether');
-     //let amountOutMin=0;
       let path=[this.mnt_addr,this.usdt_addr]; //mnt swap usdt
       if(this.mntFromTo ==0){
         path=[this.usdt_addr,this.mnt_addr];//usdt swap mnt
       }      
-      let to=this.client_addr;
-      //let deadline=new BigNumber(Math.floor(Date.now()/1000)+1200);
+      let to=this.client_addr;   
       let deadline=this.web3.utils.toHex(Math.floor(Date.now()/1000)+1200);  
       this.web3.eth.getTransactionCount(to,async(err,txCount)=>{
           let txObject={
@@ -410,11 +437,11 @@ export default {
           }
         })
         this.swapState="Swap success!";
-          this.getAddress(this.client_addr, this.mnt_addr, 1);
-          this.getAddress(this.client_addr, this.usdt_addr, 2);
-          this.getAddress(this.client_addr, this.lp_addr, 3);
-          this.getAddress(this.lp_addr, this.mnt_addr, 4);
-          this.getAddress(this.lp_addr, this.usdt_addr, 5);
+          this.$options.methods.getAddress.call(this,this.client_addr, this.mnt_addr, 1);
+          this.$options.methods.getAddress.call(this,this.client_addr, this.usdt_addr, 2);
+          this.$options.methods.getAddress.call(this,this.client_addr, this.lp_addr, 3);
+          this.$options.methods.getAddress.call(this,this.lp_addr, this.mnt_addr, 4);
+          this.$options.methods.getAddress.call(this,this.lp_addr, this.usdt_addr, 5);
       });
     },
     changeApproveState(){
@@ -582,6 +609,44 @@ export default {
           console.log('removeLiquidity complete');
       });
     },
+    Transfer(toAddr,contractAddr="",amount, type) { //type ==1 bnb, type==2 mnt , type ==3 usdt
+
+      this.web3.eth.getTransactionCount(this.client_addr, (err, txCount) => {
+          let txObject={};
+          if (type ===1){//bnb
+            txObject = {
+                nonce:    this.web3.utils.toHex(txCount),          
+                gasLimit: this.web3.utils.toHex(80000),
+                gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('10', 'Gwei')),
+                to: toAddr,  //If it is BNB, here is the address. If it is usdt or MNT, here is the smart contract address
+                value: this.web3.utils.toHex(this.web3.utils.toWei(new BigNumber(amount).toString(),'ether')), //  if  bnb , this is transact bnb amount , if usdt or mnt , not need send, format  web3.utils.toWei('0.1','ether')
+            }
+          }else if (type ===2 || type ===3){
+            let con = new this.web3.eth.Contract(this.erc20_abi,contractAddr);
+            txObject = {
+              nonce:    this.web3.utils.toHex(txCount),          
+              gasLimit: this.web3.utils.toHex(80000),
+              gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('10', 'Gwei')),
+              to: contractAddr,  //If it is BNB, here is the address. If it is usdt or MNT, here is the smart contract address
+              data: con.methods.transfer(toAddr, this.web3.utils.toWei(new BigNumber(amount).toString(),'ether')).encodeABI()    // if bnb ,not need send.
+            }
+          }
+          //56
+          const BSC_MAIN = Common.forCustomChain('mainnet', {name: 'bnb', networkId: 97, chainId: 97}, 'petersburg');
+          const tx = new Tx(txObject,{common: BSC_MAIN});
+          let privKey = new Buffer.from(this.privateKey, 'hex');
+          tx.sign(privKey);
+          const serializedTx = tx.serialize();
+          const raw = '0x' + serializedTx.toString('hex');
+          //console.log(raw);
+          this.web3.eth.sendSignedTransaction(raw, (err, txHash) => {
+              console.log('err:', err, 'txHash:', txHash);
+              if (err == null) {
+                 
+              }
+          });
+      });
+    },
     async getChartData(times) {
       let params = {
             times:times,
@@ -635,7 +700,7 @@ export default {
             formatter: function (params) {        
               var relVal = "<h2>"+params[0].seriesName +"</h2>";
               for (var i = 0, l = params.length; i < l; i++) {        
-               relVal+="<br/><div style=\"text-align:left;\">"+params[i].marker+"  "+params[i].data.dateTime+"</div><br/><div style=\"text-align:left;\">"+ params[i].marker+"  "+params[i].data.value+"</div>";
+               relVal+="<br/><div style=\"text-align:left;\">"+params[i].marker+"  Time: "+params[i].data.dateTime+"</div><br/><div style=\"text-align:left;\">"+ params[i].marker+"  Price: "+params[i].data.value.toFixed(4)+"</div>";
               }
                 return relVal
               }
@@ -665,6 +730,7 @@ export default {
       let con = new this.web3.eth.Contract(this.erc20_abi,con_addr);
       con.methods.allowance(this.client_addr,this.uniswap_addr).call((_,ret) => {  
           let v  = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn;
+          //alert("ret " +ret);
           if (ret < v / 2n) {
             if (type ==1){
               this.mntApprove="0";
@@ -679,45 +745,26 @@ export default {
           }
       });
     },
-    postPassword(){
-      let passwordInput = prompt('');
-
- window.flutter_inappwebview.callHandler(
-        "hehe",
-        "saga",
-        true,
-        ["sex", 28],
-        { bro: "kanon" },
-          {password:passwordInput});
-
-
-
-      // window.flutter_inappwebview.callHandler(
-      //   "hehe",
-      //   "saga",
-      //   true,
-      //   ["sex", 28],
-      //   { bro: "kanon" },
-      //   {password:"passwordInput"}
-      // );
+   
+    init(){
+      this.getPriceRate(); 
+      this.getAddress(this.client_addr, this.mnt_addr, 1);     
+      this.getAddress(this.client_addr, this.usdt_addr, 2);
+      this.getAddress(this.client_addr, this.lp_addr, 3);
+      this.getAddress(this.lp_addr, this.mnt_addr, 4);
+      this.getAddress(this.lp_addr, this.usdt_addr, 5);
+      this.getTotalSupply();
+      this.getChartData(15);
+      this.getBNB();  
+      this.$options.methods.getApproveState.call(this,this.mnt_addr , 1);
+      this.$options.methods.getApproveState.call(this,this.usdt_addr, 0);
     }
     
   },
   mounted() {
-    this.getPriceRate();
-    this.getFlatterInfo();   
-    this.getAddress(this.client_addr, this.mnt_addr, 1);
-    this.getAddress(this.client_addr, this.usdt_addr, 2);
-    this.getAddress(this.client_addr, this.lp_addr, 3);
-    this.getAddress(this.lp_addr, this.mnt_addr, 4);
-    this.getAddress(this.lp_addr, this.usdt_addr, 5);
-    this.getTotalSupply();
-    this.getChartData(15);
-    this.getBNB();  
-    this.$options.methods.getApproveState.call(this,this.mnt_addr , 1);
-    this.$options.methods.getApproveState.call(this,this.usdt_addr, 0);
-  
-  },
+     this.getFlatterInfo();  
+     //this.init();
+         },
   computed:{
     mntToUsdtSwap(){
       let {mntSwap}=this

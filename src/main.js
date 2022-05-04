@@ -9,6 +9,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 import "@babel/polyfill"
 import i18n from './lang/index'
 
+
+
 //兼容IE11
 if (!FileReader.prototype.readAsBinaryString) {
     FileReader.prototype.readAsBinaryString = function (fileData) {
@@ -66,7 +68,8 @@ Vue.prototype.$api = api;
 // Vue.prototype.$staffapi = staffapi;
 import Web3 from 'web3'
 Vue.prototype.Web3 = Web3
-
+import adaptive from './lang/Adaptive.js';
+Vue.use(adaptive);
 new Vue({
     store,
     router,

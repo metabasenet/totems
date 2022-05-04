@@ -4,14 +4,14 @@ import i18n from "../lang/index"
 const routes = [
     {
         path: "/",
-        name: "main",
+        name: "index",
         meta: {
             parent: "",
             needLogin: false,
             title: "totems"
         },
         component: () =>
-            import("../views/Home/main.vue"),
+            import("../views/Home/index.vue"),
         children: [
             
         ]
@@ -40,6 +40,20 @@ const routes = [
         },
         component: () =>
             import("../views/Home/chart.vue"),
+        children: [
+            
+        ]
+    },
+    {
+        path: "/index",
+        name: "index",
+        meta: {
+            parent: "Home",
+            needLogin: false,
+            title: "$t('routes.browser')"
+        },
+        component: () =>
+            import("../views/Home/index.vue"),
         children: [
             
         ]
