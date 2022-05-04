@@ -34,7 +34,7 @@
                 </div>
                 <div class="both24"></div>
               <div class="commit">
-                <input type="submit" name="button2" id="button2" value="Commit" onClick="javascript:showDiv1()">
+                <input type="submit" name="button2" id="button2" value="Commit" @click="showDiv1()">
               </div>
             </div><!--Swap-->
         
@@ -60,7 +60,7 @@
         </div>
         <div class="both24"></div>
         <div class="commit">
-        <input type="submit" name="button2" id="button2" value="Commit" onClick="javascript:showDiv1()">
+        <input type="submit" name="button2" id="button2" value="Commit" @click="showDiv1()">
         </div>
         </div><!--Liquidity-->
         
@@ -96,7 +96,7 @@
         </div>
         <div class="both24"></div>
         <div class="commit">
-        <input type="submit" name="button2" id="button2" value="Commit" onClick="javascript:showDiv1()">
+        <input type="submit" name="button2" id="button2" value="Commit" @onClick="showDiv1()">
         </div>
         </div><!--Remove-->
         
@@ -136,6 +136,26 @@
         </div>
         <div class="both24"></div>
         </div>
+
+        <div class="pop-show" id="popDiv1">
+          <h1>Please input your password!</h1>
+          <div style="margin-bottom:0.96rem; padding: 0.1rem">
+          <div class="info-show">
+            <input type="text" name="textfield2" id="textfield2">
+          </div>
+          <div class="pop-operation">
+          <ul>
+          <li class="green">
+              <em><input type="submit" name="button3" id="button3" value="determine" @click="closeDiv1()"></em>
+          </li>
+          <li class="red">
+              <em><input type="submit" name="button4" id="button4" value="cancel" @click="closeDiv1()"></em>
+          </li>
+          </ul>
+          </div>
+          </div>
+        </div><!--提交-->
+        
     </div>
 </template>
 
@@ -723,6 +743,16 @@ export default {
             
           }
       });
+    },
+    showDiv1(){
+      document.getElementById('popDiv1').style.top='30%';
+      document.getElementById('popDiv1').style.transition='top 0.5s';
+      document.getElementById('white_bj').style.display='block';
+    },
+    closeDiv1(){
+      document.getElementById('popDiv1').style.top='-10rem';
+      document.getElementById('white_bj').style.transition='top 0.5s';
+      document.getElementById('white_bj').style.display='none';
     },
    
     init(){
