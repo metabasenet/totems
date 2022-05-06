@@ -2,135 +2,145 @@
   <div class="main">
     <div class="tab-wrapper">
     <ul class="tab-menu">
-        <li :class="{active:tabIndex === '1'}" @click="handleClick('1')">Swap</li>
+        
+        <li v-for="(tab ,index) in tabs" :key="index" :class="{active:tabIndex ===tab.name}" @click="handleClick(tab.name)">{{tab.label}}
+          <transition name="fade"><div v-show="tabIndex ===tab.name" class="line" style="width: 100%;"></div></transition>
+        </li>
+      
+        <!--<li :class="{active:tabIndex === '1'}" @click="handleClick('1')">Swap</li>
         <li :class="{active:tabIndex === '2'}" @click="handleClick('2')">Liquidity</li>
         <li :class="{active:tabIndex === '3'}" @click="handleClick('3')">Remove</li>
-        <li :class="{active:tabIndex === '4'}" @click="handleClick('4')">Trend</li>
+        <li :class="{active:tabIndex === '4'}" @click="handleClick('4')">Trend</li>-->
     </ul>
         <div class="both24"></div>
           <div class="tab-content space">
             <div class="contentshow" v-show="tabIndex === '1'">
-              <div class="inputbox">
+              <div class="inputbox" id ="mntSwapDiv">
                 <dl>
-                  <dt>From</dt>
+                  <dt><span v-if="mntFromTo == 1">From</span><span v-else>To</span></dt>
                   <dd>
-                    <input class="inputshow" type="text" name="textfield" id="textfield" placeholder="Please Inputswap MNT value"  onblur="checkna()" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')">
+                    <input class="inputshow"  v-model="mntSwap"  type="number" name="textfield" id="textfield" placeholder="Please input swap MNT value"  onblur="checkna()" >
                     <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
                   </dd>
                 </dl>
               </div>
-              <div class="both24"></div>
-              <div class="switch">
-                    <input type="submit" name="button" id="button" value="切换">
+              <div class="both24" id="swapDiv"></div>
+              <div class="switch" id="swapButton">
+                    <input type="button" name="button" id="button" @click="exchange()"  value="切换">
               </div>
-                <div class="inputbox">
+                <div class="inputbox" id ="usdtSwapDiv">
                 <dl>
-                <dt>To</dt>
-                <dd>
-                <input class="inputshow" type="text" name="textfield" id="textfield" placeholder="Please Inputswap USDT value"  onblur="checkna()" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')">
-                <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>USDT</div>
-                </dd>
+                  <dt><span v-if="usdtFromTo == 1">From</span><span v-else>To</span></dt>
+                  <dd>
+                    <input class="inputshow" v-model="usdtSwap" type="number" name="textfield" id="textfield" placeholder="Please input swap USDT value"  onblur="checkna()" >
+                    <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>USDT</div>
+                  </dd>
                 </dl>
                 </div>
                 <div class="both24"></div>
               <div class="commit">
-                <input type="submit" name="button2" id="button2" value="Commit" @click="showDiv1()">
+                <input type="button" name="button2"  value="Commit" @click="openConfirm('1')">
               </div>
             </div><!--Swap-->
         
         <div class="contentshow"  v-show="tabIndex === '2'">
-        <div class="inputbox">
-        <dl>
-        <dt>MNT</dt>
-        <dd>
-        <input class="inputshow" type="text" name="textfield" id="textfield" placeholder="Please input liquidity MNT value"  onblur="checkna()" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')">
-        <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
-        </dd>
-        </dl>
-        </div>
-        <div class="both24"></div>
-        <div class="inputbox">
-        <dl>
-        <dt>USDT</dt>
-        <dd>
-        <input class="inputshow" type="text" name="textfield" id="textfield" placeholder="Please input liquidity USDT value"  onblur="checkna()" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')">
-        <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>MNT</div>
-        </dd>
-        </dl>
-        </div>
-        <div class="both24"></div>
-        <div class="commit">
-        <input type="submit" name="button2" id="button2" value="Commit" @click="showDiv1()">
-        </div>
+          <div class="inputbox">
+            <dl>
+              <dt>MNT</dt>
+              <dd>
+                <input class="inputshow" v-model="mntLiquidity"   type="number" name="textfield"   placeholder="Please input liquidity MNT value"  onblur="checkna()">
+                <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
+              </dd>
+            </dl>
+          </div>
+          <div class="both24"></div>
+          <div class="inputbox">
+            <dl>
+              <dt>USDT</dt>
+              <dd>
+                <input class="inputshow"  v-model="usdtLiquidity" type="number" name="textfield"  placeholder="Please input liquidity USDT value"  onblur="checkna()" >
+                <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>MNT</div>
+              </dd>
+            </dl>
+          </div>
+          <div class="both24"></div>
+          <div class="commit">
+          <input type="button" name="button2"   value="Commit" @click="openConfirm('2')">
+          </div>
         </div><!--Liquidity-->
         
         <div class="contentshow"  v-show="tabIndex === '3'">
-        <div class="inputbox">
-        <dl>
-        <dt>LP</dt>
-        <dd>
-        <input class="inputshow" type="text" name="textfield" id="textfield" placeholder="Please input lpMNT value"  onblur="checkna()" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')">
-        <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
-        </dd>
-        </dl>
-        </div>
-        <div class="both24"></div>
-        <div class="inputbox">
-        <dl>
-        <dt>MNT</dt>
-        <dd>
-        <input name="textfield" type="text" class="inputshow" id="textfield"  onblur="checkna()" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')" readonly="readonly" placeholder="">
-        <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
-        </dd>
-        </dl>
-        </div>
-        <div class="both24"></div>
-        <div class="inputbox">
-        <dl>
-        <dt>USDT</dt>
-        <dd>
-        <input name="textfield" type="text" class="inputshow" id="textfield"  onblur="checkna()" onKeyUp="this.value=this.value.replace(/[^\d.]/g,'')" readonly="readonly" placeholder="">
-        <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>MNT</div>
-        </dd>
-        </dl>
-        </div>
-        <div class="both24"></div>
-        <div class="commit">
-        <input type="submit" name="button2" id="button2" value="Commit" @onClick="showDiv1()">
-        </div>
+          <div class="inputbox">
+            <dl>
+              <dt>LP</dt>
+              <dd>
+                <input class="inputshow" v-model="lpRemove"   type="number"  name="textfield"   placeholder="Please input remove lp value"  onblur="checkna()" >
+                <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
+              </dd>
+            </dl>
+          </div>
+          <div class="both24"></div>
+          <div class="inputbox">
+            <dl>
+              <dt>MNT</dt>
+              <dd>
+                <input name="textfield"  v-model="mntRemove" type="number"  class="inputshow"    onblur="checkna()" readonly="readonly" placeholder="">
+                <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
+              </dd>
+            </dl>
+          </div>
+          <div class="both24"></div>
+          <div class="inputbox">
+            <dl>
+              <dt>USDT</dt>
+              <dd>
+                <input name="textfield" v-model="usdtRemove" type="number" class="inputshow"    onblur="checkna()"  readonly="readonly" placeholder="">
+                <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>MNT</div>
+              </dd>
+            </dl>
+          </div>
+          <div class="both24"></div>
+          <div class="commit">
+          <input type="button" name="button2"  value="Commit" @click="openConfirm('3')">
+  
+          </div>
         </div><!--Remove-->
         
         <div class="contentshow"  v-show="tabIndex === '4'">
-        <div class="chartshow"></div>
+        <div class="chartshow">           
+            <div id="chart" ref ="chart" style="width:380px;height:200px;"></div>
+        </div>
         </div><!--Trend-->
     </div><!-- //tab-content -->
         <div class="both24"></div>
         <div class="datashow space">
         <div class="both24"></div>
         <ul>
-        <li><em>MNT:</em>90921.9736</li>
-        <li><em>USDT:</em>20912406.8904</li>
-        <li><em>LP:</em>28166.9190</li>
+        <li><em>MNT:</em><span v-if="!isNaN(mnt)">{{mnt}}</span></li>
+        <li><em>USDT:</em><span v-if="!isNaN(usdt)">{{ usdt }}</span></li>
+        <li><em>LP:</em><span v-if="!isNaN(lp)">{{ lp }}</span></li>
+        <li><em>BNB:</em><span v-if="!isNaN(bnb)">{{bnb}}</span></li>
         </ul>
         <ul>
-        <li><em>Pool MNT:</em>9069.0624</li>
-        <li><em>Pool USDT:</em>87489.7393</li>
-        <li><em>Price:</em>9.6471</li>
-        <li><em>BNB:</em>0.1</li>
+        <li><em>Pool MNT:</em><span v-if="!isNaN(mntPool)">{{ mntPool }}</span></li>
+        <li><em>Pool USDT:</em><span v-if="!isNaN(usdtPool)">{{ usdtPool }}</span></li>
+        <li><em>Price:</em><span v-if="!isNaN(mntToUsdtRate)">{{ mntToUsdtRate }}</span></li>
+        
         </ul>
         <div class="both24"></div>
         </div>
         <div class="both24"></div>
         <div class="chooseshow space">
-        <h1>Please Approve MNT and USDT flrst!</h1>
+        <h1>{{statusInfo}}</h1>
+        <h1>{{approveInfo}}</h1>
         <div class="wrapper">
         <input name="select" type="radio" id="option-1" checked>
-        <input type="radio" name="select" id="option-2">
-        <label for="option-1" class="option option-1">
-        <span>Approve MNT</span>
+        <!--<input type="radio" name="select" id="option-2">-->
+        <label for="option-1" class="option option-1" v-if="mntApprove === '0'">
+        <span @click="openConfirm('4')">Approve MNT</span>
         </label>
-        <label for="option-2" class="option option-2">
-        <span>Approve USDT</span>
+        <label for="option-2" class="option option-1" v-if="usdtApprove === '0'">
+        <span @click ="openConfirm('5')">Approve USDT</span>
         </label>
         </div>
         </div>
@@ -141,21 +151,41 @@
           <h1>Please input your password!</h1>
           <div style="margin-bottom:0.96rem; padding: 0.1rem">
           <div class="info-show">
-            <input type="text" name="textfield2" id="textfield2">
+            <input v-if="passwordType" type="password" name="password"  v-model="password" ref="passwordPassword">
+            <input v-if="!passwordType" type="text" name="password"  v-model="password" ref="passwordText">
+            <img  v-if="passwordType" style="vertical-align:middle;" src="../../assets/images/eyeClose.jpg" @click="swithPassword()">
+            <img  v-if="!passwordType" style="vertical-align:middle;" src="../../assets/images/eyeOpen.jpg" @click="swithPassword()">
           </div>
           <div class="pop-operation">
           <ul>
           <li class="green">
-              <em><input type="submit" name="button3" id="button3" value="determine" @click="closeDiv1()"></em>
+              <em><input  type="submit" name="button3" id="button3" value="determine" @click="determine()"></em>
           </li>
           <li class="red">
-              <em><input type="submit" name="button4" id="button4" value="cancel" @click="closeDiv1()"></em>
+              <em><input type="submit" name="button4" id="button4" value="cancel" @click="cancel1()"></em>
           </li>
           </ul>
           </div>
           </div>
-        </div><!--提交-->
+        </div><!--commit-->
+        <div class="pop-show" id="popDiv2" style="min-height:2.2rem;">
+          <h1 style="background-color:#E6A23C;">{{dialogTip}}</h1>
+          <div style="margin-bottom:0.96rem; padding: 0.1rem">
+          <div class="info-show" style="margin-bottom:0.2rem;margin-top:0.2rem;">
+              {{dialogInfo}}
+          </div>
+          <div class="pop-operation">
+          <ul>
+          <li><em><input></input></em></li>
+          <li class="green">
+              <em><input  type="submit" name="button3" id="button3" value="determine" @click="concel2()"></em>
+          </li>
         
+          </ul>
+          </div>
+          </div>
+        </div><!--alert-->
+        <div class="main-bj" id="white_bj"></div>
     </div>
 </template>
 
@@ -180,24 +210,29 @@ export default {
         { name: "4", label: "Trend" },
       ],
       tabIndex:'1',
-      mntSwap: new BigNumber(),
-      usdtSwap: new BigNumber(),
-      mntLiquidity: new BigNumber(),
-      usdtLiquidity:new BigNumber(),
-      lpRemove:new BigNumber(),
-      mntRemove:new BigNumber(),
-      usdtRemove:new BigNumber(),
+      dialogIndex:'1', // businessIndex type swap ==1 , liquidity==2 , remove ==3
+      passwordType:true, //password type password ==true , text ==false
+      dialogTip:"",//警告对话框警示
+      dialogInfo:"",   //警告对话框信息 
+      statusInfo:"",//交易成功后状态信息
+      mntSwap: new BigNumber(""),
+      usdtSwap: new BigNumber(""),
+      mntLiquidity: new BigNumber(""),
+      usdtLiquidity:new BigNumber(""),
+      lpRemove:new BigNumber(""),
+      mntRemove:new BigNumber(""),
+      usdtRemove:new BigNumber(""),
       mntApprove:"1",  //1 为已授权
       usdtApprove:"1", //1 为已授权
       approveInfo:"",// 授权信息
       mnt_addr: "0x450af0a7c8372eee72dd2e4833d9aac4928c151f",
       usdt_addr: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",
       lp_addr: "0x82260d3f8c98e90a4ec0dcf709e2ad8f592ea941", 
-      //client_addr:"",
-      client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
+      client_addr:"",
+      //client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
       //client_addr: "0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8",  //account 2
-      //privateKey:"",
-      privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
+      privateKey:"",
+      //privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
       //privateKey:"a0f4220b3ce3fce01080371af0d924341d52767b25c2abaea3d44c18ae67845b",
       uniswap_addr : "0x9ac64cc6e4415144c455bd8e4837fea55603e5c3",
 
@@ -205,7 +240,7 @@ export default {
      
       DOMAIN_SEPARATOR :"0xd010526b15a49fbab086ffd91b78ef60d6bdb7037f5d98ba83de33b8fb33c43c",
       PERMIT_TYPEHASH :"0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9",
-      password:"123",
+      password:"",
       passwordInput:"",
       abi: [ { constant: true, inputs: [], name: "name", outputs: [{ name: "", type: "string" }], payable: false, stateMutability: "view", type: "function", }, { constant: false, inputs: [ { name: "spender", type: "address" }, { name: "value", type: "uint256" }, ], name: "approve", outputs: [{ name: "", type: "bool" }], payable: false, stateMutability: "nonpayable", type: "function", }, { constant: true, inputs: [], name: "totalSupply", outputs: [{ name: "", type: "uint256" }], payable: false, stateMutability: "view", type: "function", }, { constant: false, inputs: [ { name: "from", type: "address" }, { name: "to", type: "address" }, { name: "value", type: "uint256" }, ], name: "transferFrom", outputs: [{ name: "", type: "bool" }], payable: false, stateMutability: "nonpayable", type: "function", }, { constant: true, inputs: [], name: "decimals", outputs: [{ name: "", type: "uint8" }], payable: false, stateMutability: "view", type: "function", }, { constant: false, inputs: [ { name: "spender", type: "address" }, { name: "addedValue", type: "uint256" }, ], name: "increaseAllowance", outputs: [{ name: "", type: "bool" }], payable: false, stateMutability: "nonpayable", type: "function", }, { constant: true, inputs: [{ name: "owner", type: "address" }], name: "balanceOf", outputs: [{ name: "", type: "uint256" }], payable: false, stateMutability: "view", type: "function", }, { constant: true, inputs: [], name: "symbol", outputs: [{ name: "", type: "string" }], payable: false, stateMutability: "view", type: "function", }, { constant: false, inputs: [ { name: "spender", type: "address" }, { name: "subtractedValue", type: "uint256" }, ], name: "decreaseAllowance", outputs: [{ name: "", type: "bool" }], payable: false, stateMutability: "nonpayable", type: "function", }, { constant: false, inputs: [ { name: "to", type: "address" }, { name: "value", type: "uint256" }, ], name: "transfer", outputs: [{ name: "", type: "bool" }], payable: false, stateMutability: "nonpayable", type: "function", }, { constant: true, inputs: [ { name: "owner", type: "address" }, { name: "spender", type: "address" }, ], name: "allowance", outputs: [{ name: "", type: "uint256" }], payable: false, stateMutability: "view", type: "function", }, { inputs: [], payable: true, stateMutability: "payable", type: "constructor", }, { anonymous: false, inputs: [ { indexed: true, name: "from", type: "address" }, { indexed: true, name: "to", type: "address" }, { indexed: false, name: "value", type: "uint256" }, ], name: "Transfer", type: "event", }, { anonymous: false, inputs: [ { indexed: true, name: "owner", type: "address" }, { indexed: true, name: "spender", type: "address" }, { indexed: false, name: "value", type: "uint256" }, ], name: "Approval", type: "event", }, ],
       mnt: new BigNumber(""),
@@ -220,13 +255,12 @@ export default {
       _reserve0:new BigNumber(),
       _reserve1:new BigNumber(),
       totalSupply:new BigNumber(),    
-      ROUNDING_MODE:4,  //Default ROUNDING_MODE
+      ROUNDING_MODE:6,  //Default ROUNDING_MODE
       calculationSwapOnce:true,
       calculationLiquidityOnce:true,
       exchangeState:true,
       mntFromTo:1,
-      usdtFromTo:0,
-      swapState:"",
+      usdtFromTo:0,      
       web3:new this.Web3("https://data-seed-prebsc-1-s1.binance.org:8545"),
       slippageTolerance:new BigNumber("0.98"),
       uniswap_abi:[{ "inputs": [{ "internalType": "uint256", "name": "amountIn", "type": "uint256" }, { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" }, { "internalType": "address[]", "name": "path", "type": "address[]" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "deadline", "type": "uint256" }], "name": "swapExactTokensForTokens", "outputs": [{ "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" }], "stateMutability": "nonpayable", "type": "function" },{ "inputs": [{ "internalType": "address", "name": "tokenA", "type": "address" }, { "internalType": "address", "name": "tokenB", "type": "address" }, { "internalType": "uint256", "name": "amountADesired", "type": "uint256" }, { "internalType": "uint256", "name": "amountBDesired", "type": "uint256" }, { "internalType": "uint256", "name": "amountAMin", "type": "uint256" }, { "internalType": "uint256", "name": "amountBMin", "type": "uint256" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "deadline", "type": "uint256" }], "name": "addLiquidity", "outputs": [{ "internalType": "uint256", "name": "amountA", "type": "uint256" }, { "internalType": "uint256", "name": "amountB", "type": "uint256" }, { "internalType": "uint256", "name": "liquidity", "type": "uint256" }], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "tokenA", "type": "address" }, { "internalType": "address", "name": "tokenB", "type": "address" }, { "internalType": "uint256", "name": "liquidity", "type": "uint256" }, { "internalType": "uint256", "name": "amountAMin", "type": "uint256" }, { "internalType": "uint256", "name": "amountBMin", "type": "uint256" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "deadline", "type": "uint256" }, { "internalType": "bool", "name": "approveMax", "type": "bool" }, { "internalType": "uint8", "name": "v", "type": "uint8" }, { "internalType": "bytes32", "name": "r", "type": "bytes32" }, { "internalType": "bytes32", "name": "s", "type": "bytes32" }], "name": "removeLiquidityWithPermit", "outputs": [{ "internalType": "uint256", "name": "amountA", "type": "uint256" }, { "internalType": "uint256", "name": "amountB", "type": "uint256" }], "stateMutability": "nonpayable", "type": "function" }],
@@ -250,6 +284,142 @@ export default {
       //  this.$echarts.getInstanceByDom(this.$refs.chart).resize();
       // })
 
+    },
+    swithPassword(){
+      this.passwordType=!this.passwordType;
+      this.$nextTick(function(){
+        if(this.passwordType){
+          this.$refs.passwordPassword.focus();
+        }else{
+          this.$refs.passwordText.focus();
+        }
+      })
+    },    
+    openFlutterConfirm(index){
+        window.flutter_inappwebview.callHandler('verify', "password").then((result)=>{    
+          if(result !=null && result !=""){
+            if(index =="1" || index =="2" || index =="3"){
+              if (this.mntApprove =="0" || this.usdtApprove =="0"){
+                this.alertDiv("alert","Please authorize before trading !");         
+                return;      
+              }
+            }     
+            switch(index){
+              case "1":{//swap           
+                if (this.mntSwap.toString()  =="NaN" || this.mntSwap.toString() == "0" || this.usdtSwap.toString()  =="NaN" || this.usdtSwap.toString() == "0"){
+                  this.alertDiv("alert","Please input swap amount!");         
+                  return;                                     
+                }
+              break;
+              }
+              case "2":{ //Liquidity
+                if (this.mntLiquidity.toString()  =="NaN" || this.mntLiquidity.toString() == "0" || this.usdtLiquidity.toString()  =="NaN" || this.usdtLiquidity.toString() == "0"){
+                    this.alertDiv("alert","Please input liquidity amount!");         
+                    return;                                           
+                }
+                break;
+              }  
+              case "3":{ //Remove
+                if (this.lpRemove.toString()  =="NaN" || this.lpRemove.toString() == "0" || this.usdtRemove.toString()  =="NaN" || this.usdtRemove.toString() == "0" || this.mntRemove.toString()  =="NaN" || this.mntRemove.toString() == "0"){
+                    this.alertDiv("alert","Please input lp amount!");         
+                    return;                                           
+                }
+                break;
+              }      
+            }
+          }else{
+            alert("Please enter the correct wallet password!");
+          }
+        });
+    },
+    openConfirm(index){
+      this.password="";
+      this.dialogIndex =index;
+      this.openFlutterConfirm(index);
+      return;
+
+
+      if(index =="1" || index =="2" || index =="3"){
+         if (this.mntApprove =="0" || this.usdtApprove =="0"){
+          this.alertDiv("alert","Please authorize before trading !");         
+          return;      
+        }
+      }     
+      switch(index){
+        case "1":{//swap           
+          if (this.mntSwap.toString()  =="NaN" || this.mntSwap.toString() == "0" || this.usdtSwap.toString()  =="NaN" || this.usdtSwap.toString() == "0"){
+            this.alertDiv("alert","Please input swap amount!");         
+            return;                                     
+          }
+        break;
+        }
+        case "2":{ //Liquidity
+           if (this.mntLiquidity.toString()  =="NaN" || this.mntLiquidity.toString() == "0" || this.usdtLiquidity.toString()  =="NaN" || this.usdtLiquidity.toString() == "0"){
+              this.alertDiv("alert","Please input liquidity amount!");         
+              return;                                           
+          }
+          break;
+        }  
+        case "3":{ //Remove
+           if (this.lpRemove.toString()  =="NaN" || this.lpRemove.toString() == "0" || this.usdtRemove.toString()  =="NaN" || this.usdtRemove.toString() == "0" || this.mntRemove.toString()  =="NaN" || this.mntRemove.toString() == "0"){
+              this.alertDiv("alert","Please input lp amount!");         
+              return;                                           
+          }
+          break;
+        }      
+      }
+      document.getElementById('popDiv1').style.top='20%';
+      document.getElementById('popDiv1').style.transition='top 0.5s';
+      document.getElementById('white_bj').style.display='block';
+     
+
+    },
+    determine(){
+        window.flutter_inappwebview.callHandler('verify', this.password).then((result)=>{
+        if( result !=null && result !=""){
+         this.privateKey=result;
+        }else{
+          this.alertDiv('alert','Please enter the correct wallet password!');
+             return;
+        }
+        switch(this.dialogIndex){
+          case "1":{  //swap
+            this.swapExactTokensForTokens();
+          }
+          case "2":{  
+              this.addLiquidity();            
+          }
+          case "3":{     
+              this.removeLiquidityWithPermit();           
+          }
+          case "4":{ //mnt approve          
+              this.approve(this.mnt_addr, 1);          
+          }
+          case "5":{          
+            this.approve(this.usdt_addr, 0);           
+          }
+        }
+     
+      });
+      
+      this.cancel1();      
+    },
+    cancel1(){
+      document.getElementById('popDiv1').style.top='-10rem';
+      document.getElementById('white_bj').style.transition='top 0.5s';
+      document.getElementById('white_bj').style.display='none';
+    },
+    alertDiv(tip, info){
+      this.dialogTip=tip;
+      this.dialogInfo=info;
+      document.getElementById('popDiv2').style.top='25%';
+      document.getElementById('popDiv2').style.transition='top 0.5s';
+      document.getElementById('white_bj').style.display='block';
+    },
+    concel2(){
+      document.getElementById('popDiv2').style.top='-10rem';
+      document.getElementById('white_bj').style.transition='top 0.5s';
+      document.getElementById('white_bj').style.display='none';
     },
     getTotalSupply() {      
       let web3Contract = new this.web3.eth.Contract(this.erc20_abi, this.lp_addr);
@@ -314,7 +484,8 @@ export default {
             .then((result)=>{             
               this.client_addr = result["Address"];     
               //this.privateKey=result["PrivateKey"]; 
-              alert(this.client_addr);
+              //alert(this.client_addr);
+              this.alertDiv('address',result["Address"]);
               this.$options.methods.init.call(this);
             
             });
@@ -345,13 +516,13 @@ export default {
       this.exchangeState=!this.exchangeState;
  
       if (!this.exchangeState){
-        this.$el.querySelector("#swapButton").before(this.$el.querySelector("#usdtSwapDiv"));
+        this.$el.querySelector("#swapDiv").before(this.$el.querySelector("#usdtSwapDiv"));
         this.$el.querySelector("#swapButton").after(this.$el.querySelector("#mntSwapDiv"));
         this.mntFromTo=0;
         this.usdtFromTo=1;
       }else{
         this.$el.querySelector("#swapButton").after(this.$el.querySelector("#usdtSwapDiv"));
-        this.$el.querySelector("#swapButton").before(this.$el.querySelector("#mntSwapDiv"));
+        this.$el.querySelector("#swapDiv").before(this.$el.querySelector("#mntSwapDiv"));
         this.mntFromTo=1;
         this.usdtFromTo=0;
       }
@@ -430,17 +601,14 @@ export default {
         tx.sign(privKey);
         let serializedTx=tx.serialize();       
         let raw='0x'+serializedTx.toString('hex');   
-        await this.web3.eth.sendSignedTransaction(raw,(err,txHash)=>{        
+        await this.web3.eth.sendSignedTransaction(raw,(err,txHash)=>{ 
+          console.log("err ",err, "txHash",txHash);       
           if(err !=null){
-            this.swapState=err;
+            this.statusInfo=err;
           }
         })
-        this.swapState="Swap success!";
-          this.$options.methods.getAddress.call(this,this.client_addr, this.mnt_addr, 1);
-          this.$options.methods.getAddress.call(this,this.client_addr, this.usdt_addr, 2);
-          this.$options.methods.getAddress.call(this,this.client_addr, this.lp_addr, 3);
-          this.$options.methods.getAddress.call(this,this.lp_addr, this.mnt_addr, 4);
-          this.$options.methods.getAddress.call(this,this.lp_addr, this.usdt_addr, 5);
+        this.statusInfo="Swap success!";   
+        this.init();
       });
     },
     changeApproveState(){
@@ -542,8 +710,14 @@ export default {
           let raw = '0x' + serializedTx.toString('hex');
           await this.web3.eth.sendSignedTransaction(raw, (err, txHash) => {
               console.log('err:', err, 'txHash:', txHash);
+              if (err !=null){
+                 this.statusInfo=err;
+              }
           });
-          console.log("AddLiquidity success!");
+          console.log("Add liquidity success!");
+          this.statusInfo="Add liquidity success!";
+          this.init(); 
+
       });
     },
      permit(owner,spender,value,deadline,nonce) {
@@ -604,8 +778,13 @@ export default {
           let raw = '0x' + serializedTx.toString('hex');
           let ret = await this.web3.eth.sendSignedTransaction(raw, (err, txHash) => {
               console.log('err:', err, 'txHash:', txHash);
+              if (err !=null){
+                 this.statusInfo=err;
+              }
           });
-          console.log('removeLiquidity complete');
+          console.log('Remove liquidity success!');
+          this.statusInfo="Remove liquidity success!";
+          this.init();
       });
     },
     Transfer(toAddr,contractAddr="",amount, type) { //type ==1 bnb, type==2 mnt , type ==3 usdt
@@ -743,18 +922,7 @@ export default {
             
           }
       });
-    },
-    showDiv1(){
-      document.getElementById('popDiv1').style.top='30%';
-      document.getElementById('popDiv1').style.transition='top 0.5s';
-      document.getElementById('white_bj').style.display='block';
-    },
-    closeDiv1(){
-      document.getElementById('popDiv1').style.top='-10rem';
-      document.getElementById('white_bj').style.transition='top 0.5s';
-      document.getElementById('white_bj').style.display='none';
-    },
-   
+    },     
     init(){
       this.getPriceRate(); 
       this.getAddress(this.client_addr, this.mnt_addr, 1);     
@@ -773,7 +941,7 @@ export default {
   mounted() {
    
      this.getFlatterInfo();  
-     this.init();
+     //this.init();
          },
   computed:{
     mntToUsdtSwap(){
@@ -886,4 +1054,11 @@ export default {
 
 <style>
  @import url("../../assets/css/main.css");
+ .fade-enter{
+    opacity: 0;
+    
+}
+.fade-enter-active{
+    transition: opacity 2s;
+}
 </style>
