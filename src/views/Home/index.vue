@@ -212,9 +212,9 @@ export default {
       tabIndex:'1',
       dialogIndex:'1', // businessIndex type swap ==1 , liquidity==2 , remove ==3
       passwordType:true, //password type password ==true , text ==false
-      dialogTip:"",//警告对话框警示
-      dialogInfo:"",   //警告对话框信息 
-      statusInfo:"",//交易成功后状态信息
+      dialogTip:"",//alert tip
+      dialogInfo:"",   //alert info  
+      statusInfo:"",//status result info 
       mntSwap: new BigNumber(""),
       usdtSwap: new BigNumber(""),
       mntLiquidity: new BigNumber(""),
@@ -222,9 +222,9 @@ export default {
       lpRemove:new BigNumber(""),
       mntRemove:new BigNumber(""),
       usdtRemove:new BigNumber(""),
-      mntApprove:"1",  //1 为已授权
-      usdtApprove:"1", //1 为已授权
-      approveInfo:"",// 授权信息
+      mntApprove:"1",  //1  mnt approved success
+      usdtApprove:"1", //1  usdt approved success
+      approveInfo:"",// approve info 
       mnt_addr: "0x450af0a7c8372eee72dd2e4833d9aac4928c151f",
       usdt_addr: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",
       lp_addr: "0x82260d3f8c98e90a4ec0dcf709e2ad8f592ea941", 
@@ -298,47 +298,32 @@ export default {
     openFlutterConfirm(index){
         window.flutter_inappwebview.callHandler('verify', "password").then((result)=>{    
           if(result !=null && result !=""){
-            if(index =="1" || index =="2" || index =="3"){
-              if (this.mntApprove =="0" || this.usdtApprove =="0"){
-                this.alertDiv("alert","Please authorize before trading !");         
-                return;      
-              }
-            }     
+            this.privateKey=result;
             switch(index){
-              case "1":{//swap           
-                if (this.mntSwap.toString()  =="NaN" || this.mntSwap.toString() == "0" || this.usdtSwap.toString()  =="NaN" || this.usdtSwap.toString() == "0"){
-                  this.alertDiv("alert","Please input swap amount!");         
-                  return;                                     
-                }
-              break;
+              case "1":{  //swap
+                this.swapExactTokensForTokens();
               }
-              case "2":{ //Liquidity
-                if (this.mntLiquidity.toString()  =="NaN" || this.mntLiquidity.toString() == "0" || this.usdtLiquidity.toString()  =="NaN" || this.usdtLiquidity.toString() == "0"){
-                    this.alertDiv("alert","Please input liquidity amount!");         
-                    return;                                           
-                }
-                break;
-              }  
-              case "3":{ //Remove
-                if (this.lpRemove.toString()  =="NaN" || this.lpRemove.toString() == "0" || this.usdtRemove.toString()  =="NaN" || this.usdtRemove.toString() == "0" || this.mntRemove.toString()  =="NaN" || this.mntRemove.toString() == "0"){
-                    this.alertDiv("alert","Please input lp amount!");         
-                    return;                                           
-                }
-                break;
-              }      
+              case "2":{  
+                  this.addLiquidity();            
+              }
+              case "3":{     
+                  this.removeLiquidityWithPermit();           
+              }
+              case "4":{ //mnt approve          
+                  this.approve(this.mnt_addr, 1);          
+              }
+              case "5":{          
+                this.approve(this.usdt_addr, 0);           
+              }
             }
           }else{
-            alert("Please enter the correct wallet password!");
+            //alert("Please enter the correct wallet password!");
           }
         });
     },
     openConfirm(index){
       this.password="";
       this.dialogIndex =index;
-      this.openFlutterConfirm(index);
-      return;
-
-
       if(index =="1" || index =="2" || index =="3"){
          if (this.mntApprove =="0" || this.usdtApprove =="0"){
           this.alertDiv("alert","Please authorize before trading !");         
@@ -368,9 +353,11 @@ export default {
           break;
         }      
       }
-      document.getElementById('popDiv1').style.top='20%';
-      document.getElementById('popDiv1').style.transition='top 0.5s';
-      document.getElementById('white_bj').style.display='block';
+       this.openFlutterConfirm(index);
+
+      // document.getElementById('popDiv1').style.top='20%';
+      // document.getElementById('popDiv1').style.transition='top 0.5s';
+      // document.getElementById('white_bj').style.display='block';
      
 
     },
@@ -485,15 +472,34 @@ export default {
               this.client_addr = result["Address"];     
               //this.privateKey=result["PrivateKey"]; 
               //alert(this.client_addr);
-              this.alertDiv('address',result["Address"]);
+              //this.alertDiv('address',result["Address"]);
+              this.statusInfo=result["Address"];
               this.$options.methods.init.call(this);
             
             });
         }
       );
       window.addEventListener("Transfer", (event) => {           
-            alert(JSON.stringify(event.detail));
+            //alert(JSON.stringify(event.detail));
+            //{ran:'20220507180900789',privateKey:'xxxxxxxxxxxxx',token: '0xb7f04aefa2612a8321618af162fe8d90aa087e45',addr:'0x87391240190aB94F43a1365bBDe1610D6b61E2B5',amount:123}
             //{token: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",addr:"0x87391240190aB94F43a1365bBDe1610D6b61E2B5",amount:123.123}
+            alert(JSON.stringify(event));
+            this.statusInfo=event;
+            //return;
+            let result=JSON.stringify(event.detail);
+            //alert('result='+result);
+            let ran =result.ran;
+            this.privateKey=result.privateKey;
+            let contractAddr =result.token;
+            let toAddr =result.addr;
+            let amount=result.amount;
+            let type =1;// bnb
+            let result2 ="ran:"+ran +",privateKey:"+this.privateKey+",token:"+contractAddr+",addr:"+toAddr+",amount:"+amount+",type:";
+            alert(result2);
+            if (contractAddr !=""){
+              type =2;
+            }
+            this.Transfer(ran,toAddr,contractAddr,amount, type) ;
    
         });
 
@@ -622,7 +628,7 @@ export default {
           this.approveInfo="";
         }
     },
-    // owner的erc20(con_addr)代币给spender授权
+    // 
     approve( con_addr,type) {
       /*
         //https://testnet.bscscan.com/tx/0xf9562e15d1ba95636abec8d91695f613fcc647215ae00011e1169566be4cf8ba
@@ -787,9 +793,9 @@ export default {
           this.init();
       });
     },
-    Transfer(toAddr,contractAddr="",amount, type) { //type ==1 bnb, type==2 mnt , type ==3 usdt
+     Transfer(ran,toAddr,contractAddr="",amount, type) { //ran  random ,type ==1 bnb, type==2 mnt , type ==3 usdt
 
-      this.web3.eth.getTransactionCount(this.client_addr, (err, txCount) => {
+       this.web3.eth.getTransactionCount(this.client_addr, (err, txCount) => {
           let txObject={};
           if (type ===1){//bnb
             txObject = {
@@ -800,7 +806,7 @@ export default {
                 value: this.web3.utils.toHex(this.web3.utils.toWei(new BigNumber(amount).toString(),'ether')), //  if  bnb , this is transact bnb amount , if usdt or mnt , not need send, format  web3.utils.toWei('0.1','ether')
             }
           }else if (type ===2 || type ===3){
-            let con = new this.web3.eth.Contract(this.erc20_abi,contractAddr);
+           let con =new this.web3.eth.Contract(this.erc20_abi,contractAddr);
             txObject = {
               nonce:    this.web3.utils.toHex(txCount),          
               gasLimit: this.web3.utils.toHex(80000),
@@ -818,18 +824,25 @@ export default {
           const raw = '0x' + serializedTx.toString('hex');
           //console.log(raw);
           this.web3.eth.sendSignedTransaction(raw, (err, txHash) => {
-              console.log('err:', err, 'txHash:', txHash);
-              if (err == null) {
-                 
-              }
+            let result ={};
+            console.log('err:', err, 'txHash:', txHash);
+            if (err == null) {
+                result={ran:ran,result:'Success',txHash:txHash};
+            }else{
+                result={ran:ran,result:err,txHash:''};
+            }
+             window.flutter_inappwebview.callHandler('TransferResult', result);
           });
+          let resultComplete ={};
+          resultComplete={ran:ran,result:"Completed"};
+          window.flutter_inappwebview.callHandler('TransferResult', resultComplete);
       });
     },
     async getChartData(times) {
       let params = {
             times:times,
       };
-      //虚拟数据，以后修改
+      //test
       //let res={ "xAxis": ["15","14","13","12","11","10","9", "8", "7", "6", "5", "4", "3","2","1"], "legend": ["MNt Price"], "series": [{ "name": "MNt Price", "data": [10, 11, 13, 16, 20, 25, 31,38,46,55,65,76,88,101,115] }] }
         let that = this
         this.$api.getUniswap(params).then(res => {     
