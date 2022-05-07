@@ -40,6 +40,7 @@
                 <div class="both24"></div>
               <div class="commit">
                 <input type="button" name="button2"  value="Commit" @click="openConfirm('1')">
+                <!--<input type="button" name="button2"  value="test" @click="testaaa()">-->
               </div>
             </div><!--Swap-->
         
@@ -275,6 +276,25 @@ export default {
     };
   },
   methods: {
+    testaaa(){
+      // window.dispatchEvent(
+      //   new CustomEvent("Transfer", {
+      //     detail: {
+      //       ran: "202205070922",
+      //       privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",
+      //       addr: "0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8",
+      //       amount: "0.01",
+      //       token: "0x450af0a7c8372eee72dd2e4833d9aac4928c151f",
+      //     },
+      //   })
+      // );
+      //window.flutter_inappwebview.callHandler('TransferResult', "123455");
+        let resultComplete={ran:"1234",result:"Completed",txid:"345667"};
+  window.flutter_inappwebview.callHandler('TransferResult', resultComplete).then((result)=>{    
+         alert(JSON.stringify(result));
+        });
+
+    },
     handleClick(tab) {
       this.tabIndex=tab;
       //console.log("tab", tab);
@@ -483,24 +503,31 @@ export default {
             //alert(JSON.stringify(event.detail));
             //{ran:'20220507180900789',privateKey:'xxxxxxxxxxxxx',token: '0xb7f04aefa2612a8321618af162fe8d90aa087e45',addr:'0x87391240190aB94F43a1365bBDe1610D6b61E2B5',amount:123}
             //{token: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",addr:"0x87391240190aB94F43a1365bBDe1610D6b61E2B5",amount:123.123}
-            alert(JSON.stringify(event));
+            
+            //alert(event.toString());
+            //alert(JSON.stringify(event));
             this.statusInfo=event;
             //return;
-            let result=JSON.stringify(event.detail);
+           // let result=JSON.stringify(event.detail);
             //alert('result='+result);
-            let ran =result.ran;
-            this.privateKey=result.privateKey;
-            let contractAddr =result.token;
-            let toAddr =result.addr;
-            let amount=result.amount;
+            let ran =event.detail.ran;       
+            this.privateKey=event.detail.privateKey;
+            let contractAddr =event.detail.token;
+            if (contractAddr ==null || contractAddr =="undefined"){contractAddr="";}
+            let toAddr =event.detail.addr;
+            let amount=event.detail.amount;
             let type =1;// bnb
             let result2 ="ran:"+ran +",privateKey:"+this.privateKey+",token:"+contractAddr+",addr:"+toAddr+",amount:"+amount+",type:";
-            alert(result2);
+            //alert(result2);
             if (contractAddr !=""){
               type =2;
             }
-            this.Transfer(ran,toAddr,contractAddr,amount, type) ;
-   
+            // let resultComplete={ran:"1234",result:"Completed",txid:"789990"};
+            // window.flutter_inappwebview.callHandler('TransferResult', resultComplete).then((result)=>{    
+            //   alert(result);
+            //    });
+
+            this.Transfer(ran,toAddr,contractAddr,amount, type);   
         });
 
 
@@ -793,7 +820,7 @@ export default {
           this.init();
       });
     },
-     Transfer(ran,toAddr,contractAddr="",amount, type) { //ran  random ,type ==1 bnb, type==2 mnt , type ==3 usdt
+     async Transfer(ran,toAddr,contractAddr="",amount, type) { //ran  random ,type ==1 bnb, type==2 mnt , type ==3 usdt
 
        this.web3.eth.getTransactionCount(this.client_addr, (err, txCount) => {
           let txObject={};
@@ -824,18 +851,22 @@ export default {
           const raw = '0x' + serializedTx.toString('hex');
           //console.log(raw);
           this.web3.eth.sendSignedTransaction(raw, (err, txHash) => {
-            let result ={};
+            let returnResult ={};
             console.log('err:', err, 'txHash:', txHash);
             if (err == null) {
-                result={ran:ran,result:'Success',txHash:txHash};
+                returnResult={ran:ran,result:'Success',txid:txHash};
             }else{
-                result={ran:ran,result:err,txHash:''};
+                returnResult={ran:ran,result:err,txid:''};
             }
-             window.flutter_inappwebview.callHandler('TransferResult', result);
+             window.flutter_inappwebview.callHandler('TransferResult', returnResult).then((result)=>{
+                alert(JSON.stringify(result));
+             });
           });
-          let resultComplete ={};
-          resultComplete={ran:ran,result:"Completed"};
-          window.flutter_inappwebview.callHandler('TransferResult', resultComplete);
+          // let resultComplete ={};
+          // resultComplete={ran:ran,result:"Completed"};
+          // window.flutter_inappwebview.callHandler('TransferResult', resultComplete).then((result)=>{
+          //       alert(result);
+          //    });
       });
     },
     async getChartData(times) {
