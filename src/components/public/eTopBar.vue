@@ -68,8 +68,7 @@
                 localStorage.setItem('virtualCurrencyLocale', this.langFlag)
                 this.$i18n.locale = localStorage.getItem('virtualCurrencyLocale')
 
-                //console.log(this.$i18n.locale)//显示当前的语言
-                //this.$i18n.locale = this.langFlag;//将所选语言应用于页面
+                
             },
             getDefaultLanguage(){
                 var virtualCurrencyLocale=localStorage.getItem('virtualCurrencyLocale')

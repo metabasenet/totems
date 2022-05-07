@@ -117,17 +117,39 @@ export default {
       return 100;
     },
     password2(){
+      let data=[
+        {first:'three', last:'four'},
+        {first:'five', last:'six'}
+      ]
+        let tmpl=(addrs)=>`
+         <table>
+        ${addrs.map(addr=>`<tr><td>${addr.first}</tr><tr>${addr.last}</td></tr>`).join('')
 
+        }
+
+         </table>
+        `
+
+        // const tmpl = addrs => `
+        // <table>
+        // ${addrs.map(addr => `
+        // <tr><td>${addr.first}</td></tr>
+        // <tr><td>${addr.last}</td></tr>
+        // `).join('')}
+        // </table>
+        // `;
+
+        console.log(tmpl(data));
     },
     password3() {
       send = async () => {
         ethereum.enable();
 
         let account = "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9";
-        console.log("地址:" + account);
-        // 返回指定地址账户的余额
+        console.log("" + account);
+        
         let balance = await this.web3.eth.getBalance(account);
-        console.log("账户余额:" + balance);
+        console.log("" + balance);
         let contractAbi = this.erc20_abi;
         let contractAddress = "0x450af0a7c8372eee72dd2e4833d9aac4928c151f";
         let myContract = new this.web3.eth.Contract(
@@ -141,7 +163,7 @@ export default {
         );
         let a = 1000000;
         let toAddress = "0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8";
-        console.log("转账地址:" + toAddress);
+        console.log("" + toAddress);
         myContract.methods
           .transfer(toAddress, 1 * a)
           .send({ from: account }, function (error, transactionHash) {

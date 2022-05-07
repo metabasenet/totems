@@ -189,9 +189,9 @@ export default {
       lpRemove:new BigNumber(),
       mntRemove:new BigNumber(),
       usdtRemove:new BigNumber(),
-      mntApprove:"1",  //1 为已授权
-      usdtApprove:"1", //1 为已授权
-      approveInfo:"",// 授权信息
+      mntApprove:"1",  //1 
+      usdtApprove:"1", //1
+      approveInfo:"",// 
       mnt_addr: "0x450af0a7c8372eee72dd2e4833d9aac4928c151f",
       usdt_addr: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",
       lp_addr: "0x82260d3f8c98e90a4ec0dcf709e2ad8f592ea941", 
@@ -455,7 +455,7 @@ export default {
           this.approveInfo="";
         }
     },
-    // owner的erc20(con_addr)代币给spender授权
+  
     approve( con_addr,type) {
       /*
         //https://testnet.bscscan.com/tx/0xf9562e15d1ba95636abec8d91695f613fcc647215ae00011e1169566be4cf8ba
@@ -651,8 +651,7 @@ export default {
       let params = {
             times:times,
       };
-      //虚拟数据，以后修改
-      //let res={ "xAxis": ["15","14","13","12","11","10","9", "8", "7", "6", "5", "4", "3","2","1"], "legend": ["MNt Price"], "series": [{ "name": "MNt Price", "data": [10, 11, 13, 16, 20, 25, 31,38,46,55,65,76,88,101,115] }] }
+     //let res={ "xAxis": ["15","14","13","12","11","10","9", "8", "7", "6", "5", "4", "3","2","1"], "legend": ["MNt Price"], "series": [{ "name": "MNt Price", "data": [10, 11, 13, 16, 20, 25, 31,38,46,55,65,76,88,101,115] }] }
         let that = this
         this.$api.getUniswap(params).then(res => {     
             that.legend=res.legend;
