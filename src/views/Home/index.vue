@@ -132,7 +132,7 @@
         </div>
         <div class="both24"></div>
         <div class="chooseshow space">
-        <h1>{{statusInfo}}</h1>
+        <h1 style="word-break:break-all;">{{statusInfo}}</h1>
         <h1>{{approveInfo}}</h1>
         <div class="wrapper">
         <input name="select" type="radio" id="option-1" checked>
@@ -506,7 +506,8 @@ export default {
             
             //alert(event.toString());
             //alert(JSON.stringify(event));
-            this.statusInfo=event;
+            //alert(JSON.stringify(event.detail));
+            //this.statusInfo=JSON.stringify(event.detail);
             //return;
            // let result=JSON.stringify(event.detail);
             //alert('result='+result);
@@ -529,9 +530,6 @@ export default {
 
             this.Transfer(ran,toAddr,contractAddr,amount, type);   
         });
-
-
-
     },
     postFlutterInfo() {
       window.flutter_inappwebview.callHandler(
@@ -859,7 +857,7 @@ export default {
                 returnResult={ran:ran,result:err,txid:''};
             }
              window.flutter_inappwebview.callHandler('TransferResult', returnResult).then((result)=>{
-                alert(JSON.stringify(result));
+                //alert(JSON.stringify(result));
              });
           });
           // let resultComplete ={};
@@ -901,13 +899,17 @@ export default {
       //Object.defineProperty(document.getElementById('chart'),'clientWidth',{get:function(){return 400;}})
 	    // Object.defineProperty(document.getElementById('chart'),'clientHeight',{get:function(){return 200;}})
       let myChart = this.$echarts.init(document.getElementById("chart"));  
+      window.onresize = function () {
+          myChart.resize()
+      }
       let option = {
-          /*grid: {
-              left: '10%',
-              right: '5%',
-              bottom: '5%',
-              top: '5%'
-            },*/
+          grid: {
+              show:true,
+              left: '15%',
+              right: '8%',
+              bottom: '12%',
+              top: '12%'
+            },
           title: {
           text: ""
           },
@@ -920,13 +922,15 @@ export default {
               }
             },
             formatter: function (params) {        
-              var relVal = "<h2>"+params[0].seriesName +"</h2>";
-              for (var i = 0, l = params.length; i < l; i++) {        
-               relVal+="<br/><div style=\"text-align:left;\">"+params[i].marker+"  Time: "+params[i].data.dateTime+"</div><br/><div style=\"text-align:left;\">"+ params[i].marker+"  Price: "+params[i].data.value.toFixed(4)+"</div>";
-              }
+                var relVal = "<h2>"+params[0].seriesName +"</h2>";
+                for (var i = 0, l = params.length; i < l; i++) {        
+                  relVal+="<br/><div style=\"text-align:left;\">"+params[i].marker+"  Time: "+params[i].data.dateTime+"</div><br/><div style=\"text-align:left;\">"+ params[i].marker+"  Price: "+params[i].data.value.toFixed(4)+"</div>";
+                }
                 return relVal
-              }
+              },
+              //extraCssText:'background:#FCFCFC;', 
           },
+    
           legend: {    
           data:this.legend
           },
@@ -935,8 +939,8 @@ export default {
           },
           yAxis: {
                type: 'value',              
-                min: (this.minPrice - ( this.maxPrice - this.minPrice)  * 0.3).toFixed(this.ROUNDING_MODE),              
-                max: (this.maxPrice + ( this.maxPrice - this.minPrice)  * 0.3).toFixed(this.ROUNDING_MODE),
+                min: (this.minPrice - ( this.maxPrice - this.minPrice)  * 0.3).toFixed(4),              
+                max: (this.maxPrice + ( this.maxPrice - this.minPrice)  * 0.3).toFixed(4),
           },
           series:this.series
       };        

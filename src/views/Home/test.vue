@@ -117,29 +117,7 @@ export default {
       return 100;
     },
     password2(){
-      let data=[
-        {first:'three', last:'four'},
-        {first:'five', last:'six'}
-      ]
-        let tmpl=(addrs)=>`
-         <table>
-        ${addrs.map(addr=>`<tr><td>${addr.first}</tr><tr>${addr.last}</td></tr>`).join('')
-
-        }
-
-         </table>
-        `
-
-        // const tmpl = addrs => `
-        // <table>
-        // ${addrs.map(addr => `
-        // <tr><td>${addr.first}</td></tr>
-        // <tr><td>${addr.last}</td></tr>
-        // `).join('')}
-        // </table>
-        // `;
-
-        console.log(tmpl(data));
+    
     },
     password3() {
       send = async () => {

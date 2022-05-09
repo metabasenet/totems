@@ -304,7 +304,7 @@ input[type="radio"]{
 .main-bj {
 	background-color: #000000;
 	position: fixed;
-	z-index: 998;		/*20161114-cj: 解决叠放高度过高遮挡时间控件的问题*/
+	z-index: 998;		
 	width: 100%;
 	left: 0px;
 	top: 0px;

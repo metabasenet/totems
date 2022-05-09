@@ -31,20 +31,6 @@ const routes = [
         ]
     },
     {
-        path: "/chart",
-        name: "chart",
-        meta: {
-            parent: "Home",
-            needLogin: false,
-            title: "$t('routes.browser')"
-        },
-        component: () =>
-            import("../views/Home/chart.vue"),
-        children: [
-            
-        ]
-    },
-    {
         path: "/index",
         name: "index",
         meta: {
