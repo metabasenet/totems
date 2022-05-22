@@ -220,6 +220,8 @@ export default {
       usdtSwap: new BigNumber(""),
       mntLiquidity: new BigNumber(""),
       usdtLiquidity:new BigNumber(""),
+      mntLiquidityMax: new BigNumber(""),
+      usdtLiquidityMax:new BigNumber(""),
       lpRemove:new BigNumber(""),
       mntRemove:new BigNumber(""),
       usdtRemove:new BigNumber(""),
@@ -229,11 +231,11 @@ export default {
       mnt_addr: "0x450af0a7c8372eee72dd2e4833d9aac4928c151f",
       usdt_addr: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",
       lp_addr: "0x82260d3f8c98e90a4ec0dcf709e2ad8f592ea941", 
-      client_addr:"",
-      //client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
+      //client_addr:"",
+      client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
       //client_addr: "0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8",  //account 2
-      privateKey:"",
-      //privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
+      //privateKey:"",
+      privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
       //privateKey:"a0f4220b3ce3fce01080371af0d924341d52767b25c2abaea3d44c18ae67845b",
       uniswap_addr : "0x9ac64cc6e4415144c455bd8e4837fea55603e5c3",
 
@@ -976,7 +978,32 @@ export default {
             
           }
       });
-    },     
+    },
+    calculationPrice(value,mntToUsdt){ //mnt =>usdt 1 ,  usdt =>mnt 0
+        let _reserve1=this._reserve1;
+        let _reserve0=this._reserve0;
+        if(mntToUsdt ==0){
+          _reserve1=this._reserve0;
+          _reserve0=this._reserve1;
+        }
+        let amountInWithFee=new BigNumber(value) * 998;
+        
+        let numerator=new BigNumber(amountInWithFee)* _reserve1;
+        let denominator=(new BigNumber( _reserve0) * 1000 ) +amountInWithFee;
+        return new BigNumber(numerator/denominator).toFixed(this.ROUNDING_MODE); 
+    },
+    calculationLiquidityMax(){
+      this.mntLiquidityMax=this.mnt;
+      this.usdtLiquidityMax=this.usdt;
+      let mntValue =calculationPrice(this.mnt,1);
+      if(mntValue<this.usdt){
+        this.usdtLiquidityMax= mntValue;
+      }else{
+        this.mntLiquidityMax=calculationPrice(this.usdt,0);
+      }
+      console.log("this.mntLiquidityMax",this.mntLiquidityMax);
+      console.log("this.usdtLiquidityMax",this.usdtLiquidityMax)
+    },   
     init(){
       this.getPriceRate(); 
       this.getAddress(this.client_addr, this.mnt_addr, 1);     
@@ -989,6 +1016,7 @@ export default {
       this.getBNB();  
       this.$options.methods.getApproveState.call(this,this.mnt_addr , 1);
       this.$options.methods.getApproveState.call(this,this.usdt_addr, 0);
+      this.calculationLiquidityMax();
     },
    formatNumber(inputNumber){
      if(inputNumber==='NaN'){inputNumber='';}
@@ -1008,7 +1036,7 @@ export default {
   },
   mounted() {   
     this.getFlatterInfo();  
-     //this.init();
+    this.init();
     },
   computed:{
     mntSwap2:{
@@ -1172,7 +1200,7 @@ export default {
           this.mntLiquidity =0;
       }  
       this.mntLiquidity= this.formatNumber(val.mntLiquidity,2);
-      if (new BigNumber(val.mntLiquidity).toNumber()> new BigNumber(this.mnt).toNumber()){
+      if (new BigNumber(val.mntLiquidity).toNumber()> new BigNumber(this.mntLiquidityMax).toNumber()){
         this.mntLiquidity=oldVal.mntLiquidity;
         return;
       }
@@ -1191,7 +1219,7 @@ export default {
           this.usdtLiquidity =0;
       } 
       this.usdtLiquidity= this.formatNumber(val.usdtLiquidity,2);      
-      if (new BigNumber(val.usdtLiquidity).toNumber()> new BigNumber(this.usdt).toNumber()){
+      if (new BigNumber(val.usdtLiquidity).toNumber()> new BigNumber(this.usdtLiquidityMax).toNumber()){
          this.usdtLiquidity=oldVal.usdtLiquidity;
          return;
        }

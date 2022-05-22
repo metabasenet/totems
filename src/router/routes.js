@@ -31,15 +31,15 @@ const routes = [
         ]
     },
     {
-        path: "/index",
-        name: "index",
+        path: "/indexpc",
+        name: "indexpc",
         meta: {
             parent: "Home",
             needLogin: false,
             title: "$t('routes.browser')"
         },
         component: () =>
-            import("../views/Home/index.vue"),
+            import("../views/Home/indexpc.vue"),
         children: [
             
         ]
