@@ -26,7 +26,7 @@
               </div>
               <div class="both24" id="swapDiv"></div>
               <div class="switch" id="swapButton">
-                    <input type="button" name="button" id="button" @click="exchange()"  value="切换">
+                    <input type="button" name="button" id="button" @click="exchange()"  value="">
               </div>
                 <div class="inputbox" id ="usdtSwapDiv">
                 <dl>
@@ -40,6 +40,7 @@
                 <div class="both24"></div>
               <div class="commit">
                 <input type="button" name="button2"  value="Commit" @click="openConfirm('1')">
+                <input type="button" name="button2"  value="refreshFlutter" @click="testaaa()">
                 <!--<input type="button" name="button2"  value="test" @click="testaaa()">-->
               </div>
             </div><!--Swap-->
@@ -275,6 +276,7 @@ export default {
       series:"",
       minPrice:0,
       maxPrice:0,
+      flutterRefresh:true,
 
     };
   },
@@ -299,6 +301,10 @@ export default {
   window.flutter_inappwebview.callHandler('TransferResult', resultComplete).then((result)=>{    
          alert(JSON.stringify(result));
         });
+
+    // window.flutter_inappwebview.callHandler('Refresh','').then((result)=>{
+    //   console.log(result);
+    // });
 
     },
     handleClick(tab) {
@@ -455,10 +461,12 @@ export default {
           let value = new BigNumber(ret/Ether).toFixed(this.ROUNDING_MODE); 
           switch (type) {
             case 1:
-              this.mnt = value;               
+              this.mnt = value;
+              this.calculationLiquidityMax();               
               break;
             case 2:
               this.usdt = value;
+              this.calculationLiquidityMax();
               break;
             case 3:
               this.lp = value;
@@ -483,8 +491,9 @@ export default {
       web3Contract.methods.getReserves().call((error,result)=>{ 
         this._reserve0=new BigNumber(result._reserve0);
         this._reserve1=new BigNumber(result._reserve1);
-        this.mntToUsdtRate=new BigNumber(new BigNumber( this._reserve1)/new BigNumber( this._reserve0)).toFixed(this.ROUNDING_MODE); ;
-        this.usdtToMntRate=new BigNumber(new BigNumber(this._reserve0)/new BigNumber( this._reserve1)).toFixed(this.ROUNDING_MODE); ;
+        this.mntToUsdtRate=new BigNumber(new BigNumber( this._reserve1)/new BigNumber( this._reserve0)).toFixed(this.ROUNDING_MODE); 
+        this.usdtToMntRate=new BigNumber(new BigNumber(this._reserve0)/new BigNumber( this._reserve1)).toFixed(this.ROUNDING_MODE);
+        this.calculationLiquidityMax(); 
       });   
     },
     
@@ -538,6 +547,12 @@ export default {
 
             this.Transfer(ran,toAddr,contractAddr,amount, type);   
         });
+
+        window.addEventListener("Refresh", (event) => { 
+          alert("refresh");
+          this.flutterRefresh=false;          
+          this.init();
+      });
     },
     postFlutterInfo() {
       window.flutter_inappwebview.callHandler(
@@ -801,7 +816,6 @@ export default {
       let vrs = eth_lib.Account.decodeSignature(sign_data);
       let approveMax = 0;
       let to = this.client_addr;
-
       this.web3.eth.getTransactionCount(this.client_addr, async (err, txCount) => {
           let txObject = {
               nonce:    this.web3.utils.toHex(txCount),
@@ -993,17 +1007,26 @@ export default {
         return new BigNumber(numerator/denominator).toFixed(this.ROUNDING_MODE); 
     },
     calculationLiquidityMax(){
-      this.mntLiquidityMax=this.mnt;
-      this.usdtLiquidityMax=this.usdt;
-      let mntValue =calculationPrice(this.mnt,1);
-      if(mntValue<this.usdt){
-        this.usdtLiquidityMax= mntValue;
-      }else{
-        this.mntLiquidityMax=calculationPrice(this.usdt,0);
+      if (this.mnt.toString() !=''  && this.usdt.toString()!='' && this._reserve0 !='' && this._reserve1 !=''){
+        this.mntLiquidityMax=this.mnt;
+        this.usdtLiquidityMax=this.usdt;
+        let mntValue =this.calculationPrice(this.mnt,1);
+         console.log('mntValue1',mntValue);
+          console.log('this.usdt1',this.usdt);
+        if(new BigNumber(mntValue).toNumber() < new BigNumber(this.usdt).toNumber()){
+          this.usdtLiquidityMax= mntValue;        
+        }else{
+          this.mntLiquidityMax=this.calculationPrice(this.usdt,0);         
+        }
+        this.statusInfo =this.mntLiquidityMax.toString() +" "+this.usdtLiquidityMax.toString();
       }
-      console.log("this.mntLiquidityMax",this.mntLiquidityMax);
-      console.log("this.usdtLiquidityMax",this.usdtLiquidityMax)
-    },   
+    }, 
+    refreshFlutter(){
+      if (this.flutterRefresh){
+        window.flutter_inappwebview.callHandler('Refresh', '');       
+      }  
+       this.flutterRefresh=true;   
+    },  
     init(){
       this.getPriceRate(); 
       this.getAddress(this.client_addr, this.mnt_addr, 1);     
@@ -1017,6 +1040,7 @@ export default {
       this.$options.methods.getApproveState.call(this,this.mnt_addr , 1);
       this.$options.methods.getApproveState.call(this,this.usdt_addr, 0);
       this.calculationLiquidityMax();
+      this.refreshFlutter();
     },
    formatNumber(inputNumber){
      if(inputNumber==='NaN'){inputNumber='';}
@@ -1218,7 +1242,7 @@ export default {
       if(new BigNumber(val.usdtLiquidity).toNumber() <0){
           this.usdtLiquidity =0;
       } 
-      this.usdtLiquidity= this.formatNumber(val.usdtLiquidity,2);      
+      this.usdtLiquidity= this.formatNumber(val.usdtLiquidity,2); 
       if (new BigNumber(val.usdtLiquidity).toNumber()> new BigNumber(this.usdtLiquidityMax).toNumber()){
          this.usdtLiquidity=oldVal.usdtLiquidity;
          return;

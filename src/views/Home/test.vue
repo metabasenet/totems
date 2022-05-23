@@ -2,18 +2,8 @@
  
 <template>
   <div> 
-    <el-input
-            style="width: 217px"
-            v-model="tagName"
-            type="text"
-            size="mini"
-            placeholder="请输入名称"
-      ></el-input>
-   <input type="number" onkeyup="if(isNaN(value))execCommand('undo')" onafterpaste="if(isNaN(value))execCommand('undo')">
-<input name=txt1 onchange="if(/\D/.test(this.value)){alert('只能输入数字');this.value='';}">
-<el-input   oninput ="value=value.replace(/[^0-9.]/g,'')"></el-input>
-<input type="number" class="input"  oninput="value=value.replace('-', '')" />
 
+ <input type="button" name="button" id="button" @click="testaaa()"  value="test">
   </div>
 </template>
  
@@ -50,8 +40,35 @@ computed:{
             obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');//只能输入两个小数
             if (obj.value.indexOf(".") < 0 && obj.value != "") {//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
                 obj.value = parseFloat(obj.value);
-            }
+          
         }
+      },
+    point(x,y){
+      // let x=x;
+      // let y=y;
+    },
+    m1({x,y}={x:0,y:0}){
+      return [x,y];
+    },
+    foo(x,y=function(){x=2;}){
+      x=3;
+      y();
+      console.log(x);
+    },
+  
+ 
+    testaaa(){
+
+      // let zhangSan=(id, chinesename)=>({id:1, chinesename:'zhangsan'});
+      // console.log(zhangSan());
+      // console.log([1,2,3].map(x =>  x*x))
+      // let index =0;
+      // let timer=setInterval(()=>{
+      //     index++;
+      //     console.log(index);
+      // },1000)
+
+    }
  
   },
   mounted:{
