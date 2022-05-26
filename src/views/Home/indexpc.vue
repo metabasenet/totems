@@ -40,7 +40,7 @@
                 <div class="both24"></div>
               <div class="commit">
                 <input type="button" name="button2"  value="Commit" @click="openConfirm('1')">
-                <input type="button" name="button2"  value="refreshFlutter" @click="testaaa()">
+                <input type="button" name="button2"  value="refreshFlutter" @click="refreshFlutter()">
                 <!--<input type="button" name="button2"  value="test" @click="testaaa()">-->
               </div>
             </div><!--Swap-->
@@ -219,6 +219,8 @@ export default {
       statusInfo:"",//status result info 
       mntSwap: new BigNumber(""),
       usdtSwap: new BigNumber(""),
+      mntSwapMax:new BigNumber(""),
+      usdtSwapMax:new BigNumber(""),
       mntLiquidity: new BigNumber(""),
       usdtLiquidity:new BigNumber(""),
       mntLiquidityMax: new BigNumber(""),
@@ -233,11 +235,14 @@ export default {
       usdt_addr: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",
       lp_addr: "0x82260d3f8c98e90a4ec0dcf709e2ad8f592ea941", 
       //client_addr:"",
-      client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
+
+      //client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
       //client_addr: "0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8",  //account 2
-      //privateKey:"",
-      privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
+      client_addr:"0x52Aa0e484f16543bfe5e7F0FFC87B868b169d96a", //zhangguang
+      privateKey:"",
+      //privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
       //privateKey:"a0f4220b3ce3fce01080371af0d924341d52767b25c2abaea3d44c18ae67845b",
+
       uniswap_addr : "0x9ac64cc6e4415144c455bd8e4837fea55603e5c3",
 
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
@@ -263,7 +268,7 @@ export default {
       calculationSwapOnce:true,
       calculationLiquidityOnce:true,
       exchangeState:true,
-      mntFromTo:1,
+      mntFromTo:1, //1 =mnt ==> usdt
       usdtFromTo:0,      
       //web3:new this.Web3("https://data-seed-prebsc-1-s1.binance.org:8545"),
       web3:new this.Web3("https://shangqingdong.work/bsc/"),
@@ -297,14 +302,14 @@ export default {
       //   })
       // );
       //window.flutter_inappwebview.callHandler('TransferResult', "123455");
-        let resultComplete={ran:"1234",result:"Completed",txid:"345667"};
-  window.flutter_inappwebview.callHandler('TransferResult', resultComplete).then((result)=>{    
-         alert(JSON.stringify(result));
-        });
+  //       let resultComplete={ran:"1234",result:"Completed",txid:"345667"};
+  // window.flutter_inappwebview.callHandler('TransferResult', resultComplete).then((result)=>{    
+  //        alert(JSON.stringify(result));
+  //       });
 
-    // window.flutter_inappwebview.callHandler('Refresh','').then((result)=>{
-    //   console.log(result);
-    // });
+    window.flutter_inappwebview.callHandler('Refresh','').then((result)=>{
+      console.log(result);
+    });
 
     },
     handleClick(tab) {
@@ -462,11 +467,11 @@ export default {
           switch (type) {
             case 1:
               this.mnt = value;
-              this.calculationLiquidityMax();               
+              this.calculationSwapAndLiquidityMax();               
               break;
             case 2:
               this.usdt = value;
-              this.calculationLiquidityMax();
+              this.calculationSwapAndLiquidityMax();
               break;
             case 3:
               this.lp = value;
@@ -493,7 +498,7 @@ export default {
         this._reserve1=new BigNumber(result._reserve1);
         this.mntToUsdtRate=new BigNumber(new BigNumber( this._reserve1)/new BigNumber( this._reserve0)).toFixed(this.ROUNDING_MODE); 
         this.usdtToMntRate=new BigNumber(new BigNumber(this._reserve0)/new BigNumber( this._reserve1)).toFixed(this.ROUNDING_MODE);
-        this.calculationLiquidityMax(); 
+        this.calculationSwapAndLiquidityMax(); 
       });   
     },
     
@@ -842,7 +847,7 @@ export default {
     },
      async Transfer(ran,toAddr,contractAddr="",amount, type) { //ran  random ,type ==1 bnb, type==2 mnt , type ==3 usdt
 
-       this.web3.eth.getTransactionCount(this.client_addr, (err, txCount) => {
+       this.web3.eth.getTransactionCount(this.client_addr, async(err, txCount) => {
           let txObject={};
           if (type ===1){//bnb
             txObject = {
@@ -870,7 +875,7 @@ export default {
           const serializedTx = tx.serialize();
           const raw = '0x' + serializedTx.toString('hex');
           //console.log(raw);
-          this.web3.eth.sendSignedTransaction(raw, (err, txHash) => {
+          await this.web3.eth.sendSignedTransaction(raw, (err, txHash) => {
             let returnResult ={};
             console.log('err:', err, 'txHash:', txHash);
             if (err == null) {
@@ -882,6 +887,9 @@ export default {
                 //alert(JSON.stringify(result));
              });
           });
+          //this.flutterRefresh=false; 
+          alert("transfer success");
+          this.init();
           // let resultComplete ={};
           // resultComplete={ran:ran,result:"Completed"};
           // window.flutter_inappwebview.callHandler('TransferResult', resultComplete).then((result)=>{
@@ -1006,7 +1014,7 @@ export default {
         let denominator=(new BigNumber( _reserve0) * 1000 ) +amountInWithFee;
         return new BigNumber(numerator/denominator).toFixed(this.ROUNDING_MODE); 
     },
-    calculationLiquidityMax(){
+    calculationSwapAndLiquidityMax(){
       if (this.mnt.toString() !=''  && this.usdt.toString()!='' && this._reserve0 !='' && this._reserve1 !=''){
         this.mntLiquidityMax=this.mnt;
         this.usdtLiquidityMax=this.usdt;
@@ -1018,7 +1026,10 @@ export default {
         }else{
           this.mntLiquidityMax=this.calculationPrice(this.usdt,0);         
         }
-        this.statusInfo =this.mntLiquidityMax.toString() +" "+this.usdtLiquidityMax.toString();
+        this.mntSwapMax=this.calculationPrice(this.usdt,0);
+        this.usdtSwapMax=this.calculationPrice(this.mnt,1);
+        //this.statusInfo =this.mntLiquidityMax.toString() +" "+this.usdtLiquidityMax.toString();
+        this.statusInfo=`${this.mntSwapMax}  ${this.usdtSwapMax} `;
       }
     }, 
     refreshFlutter(){
@@ -1039,7 +1050,7 @@ export default {
       this.getBNB();  
       this.$options.methods.getApproveState.call(this,this.mnt_addr , 1);
       this.$options.methods.getApproveState.call(this,this.usdt_addr, 0);
-      this.calculationLiquidityMax();
+      this.calculationSwapAndLiquidityMax();
       this.refreshFlutter();
     },
    formatNumber(inputNumber){
@@ -1144,7 +1155,9 @@ export default {
         return this.lpRemove;
       },
       set:function(value){   
-        if (value =="") {     
+        if (value =="") {
+          this.mntRemove=new BigNumber('');
+          this.usdtRemove=new BigNumber('');     
           this.lpRemove=new BigNumber('');            
         }    
         let temp =this.formatNumber(value);    
@@ -1186,10 +1199,19 @@ export default {
         this.mntSwap =0;
       }
       this.mntSwap= this.formatNumber(val.mntSwap,1);
-      if (new BigNumber(val.mntSwap).toNumber()> new BigNumber(this.mnt).toNumber()){
-        this.mntSwap=oldVal.mntSwap;
+      if ( this.mntFromTo ===1){
+        if (new BigNumber(val.mntSwap).toNumber()> new BigNumber(this.mnt).toNumber()){
+          this.mntSwap=oldVal.mntSwap;
         return;
-      }  
+        }
+      }
+      if ( this.mntFromTo ===0){
+        if (new BigNumber(val.mntSwap).toNumber()> new BigNumber(this.mntSwapMax).toNumber()){
+          this.mntSwap=oldVal.mntSwap;
+          return;
+        }
+      }
+      
       if (this.calculationSwapOnce){
         this.calculationSwapOnce=false;
         let amountInWithFee=new BigNumber(val.mntSwap) * 998;
@@ -1205,10 +1227,16 @@ export default {
           this.usdtSwap =0;
       }     
       this.usdtSwap=this.formatNumber(val.usdtSwap,1); 
-      if (new BigNumber(val.usdtSwap).toNumber()> new BigNumber(this.usdt).toNumber()){
-        this.usdtSwap=oldVal.usdtSwap;
-        return;
-      }    
+      if( this.usdtFromTo ===1){
+        if (new BigNumber(val.usdtSwap).toNumber()> new BigNumber(this.usdt).toNumber()){
+          this.usdtSwap=oldVal.usdtSwap;
+          return;
+        }
+      }
+     if (new BigNumber(val.usdtSwap).toNumber()> new BigNumber(this.usdtSwapMax).toNumber()){
+          this.usdtSwap=oldVal.usdtSwap;
+          return;
+        }       
       if (this.calculationSwapOnce){
         this.calculationSwapOnce=false;
         let amountInWithFee=new BigNumber(val.usdtSwap) * 998;

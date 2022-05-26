@@ -67,8 +67,75 @@ computed:{
       //     index++;
       //     console.log(index);
       // },1000)
+      // const plus1=a=>a+1;
+      // const mult2=a=>a * 2;
+      // console.log(mult2(plus1(5)));
+      // function factorial(n){
+      //   if (n ===1) return 1;
+      //   return n * factorial(n-1);
+      // }
+      // console.log(factorial(5));
+      // let foo='outer';
+      // function bar(func=()=>foo){
+      //   let foo='inner';
+      //   console.log(func());
+      // }
+      // bar();
+      // function foo(...values){
+      //   for(let value of values){
+      //     console.log(value);
+      //   }
+      // }
+      // foo(1,2,3);
+      // let foo=(a, ...b)=>[a,b];
+      // let foo1=foo(1,2,3,4,5);
+      // console.log(foo1);
+      // let index =1;
+      // let timer=setInterval(() => {
+      //  index++;
+      //  console.log(new Date()+ "  "+ index) ;
+      // }, 1);
+      // timer();
+      // function foo(){
+      //   setInterval(()=>{
+      //     console.log("args:",arguments);
+      //   },1000)
+      // }
+      // foo(1,2,3);
+      // let insert=(value)=>({into:(array)=>({after:(afterValue=>{
+      //   array.splice(array.indexOf(afterValue) +1,0,value);
+      //   return array;
+      // })})});
+      // let foo =insert(2).into([1,3]).after(1);
+      // console.log(foo);
+      // console.log(1, ...[2, 3, 4], 5)
+
+    //  console.log(Math.max(...[1,2,9,4,7,8])) let foo=(...args)=>args.map()
+    //console.log(Math.max(...[1,2,9,4,7,8]))
+      // let array1=[1,2,3];
+      // let array2=[4,5,6];
+      // let array3=[...array1, ...array2];
+      // console.log(array3);
+      // // array1.push(...array2);
+      // // console.log(array1);
+      // console.log(new Date(...[2015,1,1]));
+      // const [first, ...second]=[1,2,3,4,5];
+      // console.log(first);
+      // console.log(second);
+      //67570.711422
+      //20686485.124011
+      //100805.862044
+      //console.log(100836.888886 -100805.862044);
+      //10
+      //96.462458
+      //31.02684200000658
+      //let array1=[10, 96.462458,1008];
+      let str="hello world";
+      console.log(str.split('').reverse().join(''));
+
 
     }
+
  
   },
   mounted:{
