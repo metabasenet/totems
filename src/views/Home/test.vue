@@ -59,88 +59,142 @@ computed:{
  
     testaaa(){
 
-      // let zhangSan=(id, chinesename)=>({id:1, chinesename:'zhangsan'});
-      // console.log(zhangSan());
-      // console.log([1,2,3].map(x =>  x*x))
-      // let index =0;
-      // let timer=setInterval(()=>{
-      //     index++;
-      //     console.log(index);
-      // },1000)
-      // const plus1=a=>a+1;
-      // const mult2=a=>a * 2;
-      // console.log(mult2(plus1(5)));
-      // function factorial(n){
-      //   if (n ===1) return 1;
-      //   return n * factorial(n-1);
+      // let str="hello world";
+      // console.log(str.split('').reverse().join(''));
+      // let arrayLike = {
+      //   '0': 'a',
+      //   '1': 'b',
+      //   '2': 'c',
+      //   length: 3
+      // };
+      // console.log(Array.from(arrayLike));
+      // let set=new Set([1,2,6,9].map(x=>x*x));
+      // console.log(set.has(4));
+      // set.delete(7);
+      // set.delete(6);
+      // for(let index of set){
+      //   console.log(index);
       // }
-      // console.log(factorial(5));
-      // let foo='outer';
-      // function bar(func=()=>foo){
-      //   let foo='inner';
-      //   console.log(func());
-      // }
-      // bar();
-      // function foo(...values){
-      //   for(let value of values){
-      //     console.log(value);
-      //   }
-      // }
-      // foo(1,2,3);
-      // let foo=(a, ...b)=>[a,b];
-      // let foo1=foo(1,2,3,4,5);
-      // console.log(foo1);
-      // let index =1;
-      // let timer=setInterval(() => {
-      //  index++;
-      //  console.log(new Date()+ "  "+ index) ;
-      // }, 1);
-      // timer();
-      // function foo(){
-      //   setInterval(()=>{
-      //     console.log("args:",arguments);
-      //   },1000)
-      // }
-      // foo(1,2,3);
-      // let insert=(value)=>({into:(array)=>({after:(afterValue=>{
-      //   array.splice(array.indexOf(afterValue) +1,0,value);
-      //   return array;
-      // })})});
-      // let foo =insert(2).into([1,3]).after(1);
+      // let foo =Array.from( [1,2,3],(x)=>x*x);
       // console.log(foo);
-      // console.log(1, ...[2, 3, 4], 5)
 
-    //  console.log(Math.max(...[1,2,9,4,7,8])) let foo=(...args)=>args.map()
-    //console.log(Math.max(...[1,2,9,4,7,8]))
-      // let array1=[1,2,3];
-      // let array2=[4,5,6];
-      // let array3=[...array1, ...array2];
-      // console.log(array3);
-      // // array1.push(...array2);
-      // // console.log(array1);
-      // console.log(new Date(...[2015,1,1]));
-      // const [first, ...second]=[1,2,3,4,5];
-      // console.log(first);
-      // console.log(second);
-      //67570.711422
-      //20686485.124011
-      //100805.862044
-      //console.log(100836.888886 -100805.862044);
-      //10
-      //96.462458
-      //31.02684200000658
-      //let array1=[10, 96.462458,1008];
-      let str="hello world";
-      console.log(str.split('').reverse().join(''));
+      // function foo(){
+      //   return Array.from(arguments, value=> typeof value);
+      // }
+      // console.log(foo(null, [1,2],NaN,1,'123'));
+      // console.log(Array.from({length:3},()=>'jack'));
+      // function countSymbols(string){
+      //   return Array.from(string).length;
+      // }
+      // console.log(countSymbols('asdxcv'));
+      //console.log([1,2,3,-3,-4,5].find((n)=>n <0));
+      // for(let key of ['a','b','c'].keys()){
+      //   console.log(key);
+      // }
+      // for(let key of ['a','b','c'].values()){
+      //   console.log(key);
+      // }
+      // for(let [index ,value] of ['a','b','c'].entries()){
+      //   console.log(index , value);
+      // }
+      // function foo(x,y){
+      //   return {x,y};
+      // }
+      // console.log(foo(1,2));
+      // let birthday='2022-12-12';
+      // let person={
+      //   name:'zhangsan',
+      //   age:12,
+      //   birthday:birthday,
+      //   hello(){return "hello " + this.name;}
+      // }
+      // console.log(person.name);
+      // console.log(person.hello());
+     
+    //  let propkey='name';
+    //  let object1 = {
+    //    [propkey]:'zhangsan',
+    //     ['a'+'ge']:24,
+    //  };
+    //  console.log(object1);
+    //  console.log(object1[propkey]);
+    // let object1={a:1,b:1};
+    // let object2={b:2,c:2};
+    // let object3={c:3};
+    // let object=Object.assign(object1,object2, object3);
+    // console.log(object);
+    // var v1 = 'abc';
+    // var v2 = true;
+    // var v3 = 10;
+    // let object =Object.assign({},v1,v2,v3);
+    // console.log(object);
+    // let isTeacher =false;
+    // let promise =new Promise((resolve,reject)=>{
+        
+    //     setTimeout(()=>{
+    //       console.log('100')
+    //     },1000);
+    //     let Teacher={
+    //       name:'zhangsan',
+    //       age:24,
+    //     }
+    //     if (isTeacher){
+    //       resolve(Teacher);
+    //     }else{reject('is not a teacher');}
 
+    //   });
 
+    
+    // promise.then((result)=>{
+    //   console.log(result);
+    // }).catch((error)=>{
+    //     console.log(error);
+    // });
+    // let map =new Map();
+    // map.set(0,'a');
+    // map.set(1,'b');
+    // map.set(2,'c');
+    // for(let [key,val] of map){
+    //   console.log(key , val);
+    // }
+    // for(let key of map.keys()){
+    //   console.log(key);
+
+    // }
+    // for(let val of map.values()){
+    //   console.log(val);
+    // }
+    class Person{
+      constructor(name , age){
+        this.name =name;
+        this.age=age;
+      }
+      toString(){
+        console.log(`name is ${this.name}, age is ${this.age}`);
+      }
     }
+    class Teacher extends Person{
+      constructor(name,age,subject){
 
+        super(name,age);
+         this.subject=subject;
+      }
+      toString(){
+        console.log(`name is ${this.name}, age is ${this.age} , subject is ${this.subject}`)
+      }
+      
+    }
+    Teacher.prototype.say=function(word){
+            console.log(`teacher ${this.name} say ${word}`)
+    }
+    let teacher =new Teacher('zhangsan',24,'shuxue');
+    teacher.say('xiakele');
  
   },
   mounted:{
  
  },
-};
+}
+}
 </script>
  
