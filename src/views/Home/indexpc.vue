@@ -40,7 +40,7 @@
                 <div class="both24"></div>
               <div class="commit">
                 <input type="button" name="button2"  value="Commit" @click="openConfirm('1')">
-                <input type="button" name="button2"  value="refreshFlutter" @click="refreshFlutter()">
+                <!--<input type="button" name="button2"  value="refreshFlutter" @click="refreshFlutter()">-->
                 <!--<input type="button" name="button2"  value="test" @click="testaaa()">-->
               </div>
             </div><!--Swap-->
@@ -118,8 +118,8 @@
         <div class="datashow space">
         <div class="both24"></div>
         <ul>
-        <li><em>MNT:</em><span v-if="!isNaN(mnt)">{{mnt}}</span></li>
-        <li><em>USDT:</em><span v-if="!isNaN(usdt)">{{ usdt }}</span></li>
+        <li><em>MNT-BEP20:</em><span v-if="!isNaN(mnt)">{{mnt}}</span></li>
+        <li><em>USDT-BEP20:</em><span v-if="!isNaN(usdt)">{{ usdt }}</span></li>
         <li><em>LP:</em><span v-if="!isNaN(lp)">{{ lp }}</span></li>
         <li><em>BNB:</em><span v-if="!isNaN(bnb)">{{bnb}}</span></li>
         </ul>
@@ -236,11 +236,11 @@ export default {
       lp_addr: "0x82260d3f8c98e90a4ec0dcf709e2ad8f592ea941", 
       //client_addr:"",
 
-      //client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
+      client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
       //client_addr: "0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8",  //account 2
-      client_addr:"0x52Aa0e484f16543bfe5e7F0FFC87B868b169d96a", //zhangguang
-      privateKey:"",
-      //privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
+      //client_addr:"0x52Aa0e484f16543bfe5e7F0FFC87B868b169d96a", //zhangguang
+      //privateKey:"",
+      privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
       //privateKey:"a0f4220b3ce3fce01080371af0d924341d52767b25c2abaea3d44c18ae67845b",
 
       uniswap_addr : "0x9ac64cc6e4415144c455bd8e4837fea55603e5c3",
@@ -271,7 +271,13 @@ export default {
       mntFromTo:1, //1 =mnt ==> usdt
       usdtFromTo:0,      
       //web3:new this.Web3("https://data-seed-prebsc-1-s1.binance.org:8545"),
-      web3:new this.Web3("https://shangqingdong.work/bsc/"),
+      //web3:new this.Web3("https://data-seed-prebsc-2-s1.binance.org:8545"),
+      //web3:new this.Web3("https://data-seed-prebsc-1-s2.binance.org:8545"),
+      //web3:new this.Web3("https://data-seed-prebsc-2-s2.binance.org:8545"),
+      web3:new this.Web3("https://data-seed-prebsc-1-s3.binance.org:8545"),
+      //web3:new this.Web3("https://data-seed-prebsc-2-s3.binance.org:8545"),
+     
+      //web3:new this.Web3("https://shangqingdong.work/bsc/"),
       slippageTolerance:new BigNumber("0.98"),
       uniswap_abi:[{ "inputs": [{ "internalType": "uint256", "name": "amountIn", "type": "uint256" }, { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" }, { "internalType": "address[]", "name": "path", "type": "address[]" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "deadline", "type": "uint256" }], "name": "swapExactTokensForTokens", "outputs": [{ "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" }], "stateMutability": "nonpayable", "type": "function" },{ "inputs": [{ "internalType": "address", "name": "tokenA", "type": "address" }, { "internalType": "address", "name": "tokenB", "type": "address" }, { "internalType": "uint256", "name": "amountADesired", "type": "uint256" }, { "internalType": "uint256", "name": "amountBDesired", "type": "uint256" }, { "internalType": "uint256", "name": "amountAMin", "type": "uint256" }, { "internalType": "uint256", "name": "amountBMin", "type": "uint256" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "deadline", "type": "uint256" }], "name": "addLiquidity", "outputs": [{ "internalType": "uint256", "name": "amountA", "type": "uint256" }, { "internalType": "uint256", "name": "amountB", "type": "uint256" }, { "internalType": "uint256", "name": "liquidity", "type": "uint256" }], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "tokenA", "type": "address" }, { "internalType": "address", "name": "tokenB", "type": "address" }, { "internalType": "uint256", "name": "liquidity", "type": "uint256" }, { "internalType": "uint256", "name": "amountAMin", "type": "uint256" }, { "internalType": "uint256", "name": "amountBMin", "type": "uint256" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "deadline", "type": "uint256" }, { "internalType": "bool", "name": "approveMax", "type": "bool" }, { "internalType": "uint8", "name": "v", "type": "uint8" }, { "internalType": "bytes32", "name": "r", "type": "bytes32" }, { "internalType": "bytes32", "name": "s", "type": "bytes32" }], "name": "removeLiquidityWithPermit", "outputs": [{ "internalType": "uint256", "name": "amountA", "type": "uint256" }, { "internalType": "uint256", "name": "amountB", "type": "uint256" }], "stateMutability": "nonpayable", "type": "function" }],
       erc20_abi:[{ "constant": false, "inputs": [{ "name": "spender", "type": "address" }, { "name": "value", "type": "uint256" }], "name": "approve", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "to", "type": "address" }, { "name": "value", "type": "uint256" }], "name": "transfer", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "owner", "type": "address" }, { "name": "spender", "type": "address" }], "name": "allowance", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "totalSupply", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }],
@@ -554,7 +560,7 @@ export default {
         });
 
         window.addEventListener("Refresh", (event) => { 
-          alert("refresh");
+          //alert("refresh");
           this.flutterRefresh=false;          
           this.init();
       });
@@ -576,7 +582,7 @@ export default {
  
       if (!this.exchangeState){
         this.$el.querySelector("#swapDiv").before(this.$el.querySelector("#usdtSwapDiv"));
-        this.$el.querySelector("#swapButton").after(this.$el.querySelector("#mntSwapDiv"));
+        this.$el.querySelector("#swapButton").after(this.$el.querySelector("#mntSwapDiv"));  
         this.mntFromTo=0;
         this.usdtFromTo=1;
       }else{
@@ -585,6 +591,10 @@ export default {
         this.mntFromTo=1;
         this.usdtFromTo=0;
       }
+      this.mntSwap=new BigNumber("");
+      this.usdtSwap=new BigNumber("");
+      this.mntSwap2=new BigNumber("");
+      this.usdtSwap2=new BigNumber("");
      
     },
      swapExactTokensForTokensByPassword() {
@@ -621,7 +631,7 @@ export default {
         return ;
       }
         window.flutter_inappwebview.callHandler('verify', passwordInput).then((result)=>{
-          alert(JSON.stringify(result));
+          //alert(JSON.stringify(result));
           if( result !=null && result !=""){
             //this.swapExactTokensForTokens();
           }else{
@@ -888,7 +898,7 @@ export default {
              });
           });
           //this.flutterRefresh=false; 
-          alert("transfer success");
+          //alert("transfer success");
           this.init();
           // let resultComplete ={};
           // resultComplete={ran:ran,result:"Completed"};
@@ -1061,10 +1071,15 @@ export default {
        
     if (inputNumber.length>1){
       if(inputNumber.substring(0,1) ==='0'){
-          let temp =inputNumber.replace(/^0+/,'').replace(/^\./,'0.');    
+          let temp =inputrNumber.replace(/^0+/,'').replace(/^\./,'0.');    
           return temp; 
       }
-    }     
+    }
+    if (inputNumber.toString().split('.')[1].length > 6){
+       inputNumber =parseFloat(inputNumber).toFixed(6).toString();
+  
+    }  
+     
     return inputNumber;
     },
     
@@ -1085,7 +1100,8 @@ export default {
             this.usdtSwap=new BigNumber('');
         }
         this.calculationSwapOnce=true;
-        let temp =this.formatNumber(value);    
+        let temp =this.formatNumber(value); 
+        //console.log('temp',temp);   
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.mntSwap=temp;
         }else{
