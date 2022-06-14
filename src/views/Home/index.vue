@@ -1094,7 +1094,12 @@ export default {
             this.usdtSwap=new BigNumber('');
         }
         this.calculationSwapOnce=true;
-        let temp =this.formatNumber(value);    
+        let temp =this.formatNumber(value); 
+        if (temp.toString().indexOf('.') > -1){        
+          if (temp.toString().split('.')[1].length > 6){ 
+            temp=new BigNumber(temp).toFixed(this.ROUNDING_MODE);         
+          }
+        }   
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.mntSwap=temp;
         }else{
@@ -1113,7 +1118,12 @@ export default {
             this.usdtSwap=new BigNumber('');
         }
         this.calculationSwapOnce=true;
-        let temp =this.formatNumber(value);    
+        let temp =this.formatNumber(value);
+        if (temp.toString().indexOf('.') > -1){        
+          if (temp.toString().split('.')[1].length > 6){ 
+            temp=new BigNumber(temp).toFixed(this.ROUNDING_MODE);         
+          }
+        }      
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.usdtSwap=temp;
         }else{
@@ -1132,7 +1142,12 @@ export default {
             this.usdtLiquidity=new BigNumber('');
         }
         this.calculationLiquidityOnce=true;
-        let temp =this.formatNumber(value);    
+        let temp =this.formatNumber(value); 
+        if (temp.toString().indexOf('.') > -1){        
+          if (temp.toString().split('.')[1].length > 6){ 
+            temp=new BigNumber(temp).toFixed(this.ROUNDING_MODE);         
+          }
+        }     
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.mntLiquidity=temp;
         }else{
@@ -1151,7 +1166,12 @@ export default {
         this.usdtLiquidity=new BigNumber('');
         }
         this.calculationLiquidityOnce=true;
-        let temp =this.formatNumber(value);    
+        let temp =this.formatNumber(value); 
+        if (temp.toString().indexOf('.') > -1){        
+          if (temp.toString().split('.')[1].length > 6){ 
+            temp=new BigNumber(temp).toFixed(this.ROUNDING_MODE);         
+          }
+        }     
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.usdtLiquidity=temp;
         }else{
@@ -1169,7 +1189,12 @@ export default {
           this.usdtRemove=new BigNumber('');     
           this.lpRemove=new BigNumber('');            
         }    
-        let temp =this.formatNumber(value);    
+        let temp =this.formatNumber(value);  
+        if (temp.toString().indexOf('.') > -1){        
+          if (temp.toString().split('.')[1].length > 6){ 
+            temp=new BigNumber(temp).toFixed(this.ROUNDING_MODE);         
+          }
+        }    
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.lpRemove=temp;
         }else{

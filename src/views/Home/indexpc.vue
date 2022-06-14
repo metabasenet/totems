@@ -1075,9 +1075,9 @@ export default {
           return temp; 
       }
     }
-    // if (inputNumber.toString().split('.')[1].length > 6){
-    //    inputNumber =parseFloat(inputNumber).toFixed(6).toString();
-  
+    //console.log('inputNumber',inputNumber,inputNumber.toString().split('.')[1]);
+    // if (inputNumber.toString().split('.')[1].length > 6){ 
+    //    inputNumber=new BigNumber(inputNumber).toFixed(this.ROUNDING_MODE);  
     // }  
      
     return inputNumber;
@@ -1100,14 +1100,27 @@ export default {
             this.usdtSwap=new BigNumber('');
         }
         this.calculationSwapOnce=true;
+        if (value.indexOf('.')>-1){
+          if (value.split('.')[1].length >6){
+             //value =value.split('.')[0]+'.'+ value.split('.')[1].substring(0,6);
+          }
+        }
+        //console.log('value',value);
         let temp =this.formatNumber(value); 
-        if (temp.toString().split('.')[1].length > 6){
-          temp =parseFloat(temp).toFixed(6).toString();
-   
-        }  
-        console.log('temp',temp);   
+        // if (temp.toString().split('.')[1].length > 6){
+        //   temp =parseFloat(temp).toFixed(6).toString();
+              
+        // } 
+        
+         if (temp.toString().indexOf('.') > -1){        
+          if (temp.toString().split('.')[1].length > 6){ 
+            temp=new BigNumber(temp).toFixed(this.ROUNDING_MODE);         
+          }
+         }
+        // console.log('temp',temp);   
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.mntSwap=temp;
+          //console.log('this.mntSwap',this.mntSwap);
         }else{
           this.mntSwap=new BigNumber('');
         }
