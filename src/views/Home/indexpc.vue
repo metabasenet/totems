@@ -1075,10 +1075,10 @@ export default {
           return temp; 
       }
     }
-    if (inputNumber.toString().split('.')[1].length > 6){
-       inputNumber =parseFloat(inputNumber).toFixed(6).toString();
+    // if (inputNumber.toString().split('.')[1].length > 6){
+    //    inputNumber =parseFloat(inputNumber).toFixed(6).toString();
   
-    }  
+    // }  
      
     return inputNumber;
     },
@@ -1101,7 +1101,11 @@ export default {
         }
         this.calculationSwapOnce=true;
         let temp =this.formatNumber(value); 
-        //console.log('temp',temp);   
+        if (temp.toString().split('.')[1].length > 6){
+          temp =parseFloat(temp).toFixed(6).toString();
+   
+        }  
+        console.log('temp',temp);   
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.mntSwap=temp;
         }else{

@@ -515,7 +515,7 @@ export default {
             .callHandler("init")
             .then((result)=>{             
               this.client_addr = result["Address"]; 
-              this.statusInfo=this.client_addr;    
+              //this.statusInfo=this.client_addr;    
               //this.privateKey=result["PrivateKey"]; 
               //alert(this.client_addr);
               //this.alertDiv('address',result["Address"]);
@@ -1038,7 +1038,7 @@ export default {
         this.mntSwapMax=this.calculationPrice(this.usdt,0);
         this.usdtSwapMax=this.calculationPrice(this.mnt,1);
         //this.statusInfo =this.mntLiquidityMax.toString() +" "+this.usdtLiquidityMax.toString();
-        this.statusInfo=`${this.mntSwapMax}  ${this.usdtSwapMax} `;
+        //this.statusInfo=`${this.mntSwapMax}  ${this.usdtSwapMax} `;
       }
     }, 
     refreshFlutter(){
