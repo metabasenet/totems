@@ -19,7 +19,7 @@
                 <dl>
                   <dt><span v-if="mntFromTo == 1">From</span><span v-else>To</span></dt>
                   <dd>
-                    <input class="inputshow"  v-model="mntSwap2"  type="number" name="textfield" id="textfield" placeholder="Please input swap MNT value"  onblur="checkna()" >
+                    <input class="inputshow"  v-bind:readonly ="inputEnable" v-model="mntSwap2"  type="number" name="textfield" id="textfield" placeholder="Please input swap MNT value"  onblur="checkna()" >
                     <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
                   </dd>
                 </dl>
@@ -32,7 +32,7 @@
                 <dl>
                   <dt><span v-if="usdtFromTo == 1">From</span><span v-else>To</span></dt>
                   <dd>
-                    <input class="inputshow" v-model="usdtSwap2" type="number" name="textfield" id="textfield" placeholder="Please input swap USDT value"  onblur="checkna()" >
+                    <input class="inputshow" v-bind:readonly ="inputEnable"  v-model="usdtSwap2" type="number" name="textfield" id="textfield" placeholder="Please input swap USDT value"  onblur="checkna()" >
                     <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>USDT</div>
                   </dd>
                 </dl>
@@ -50,7 +50,7 @@
             <dl>
               <dt>MNT</dt>
               <dd>
-                <input class="inputshow" v-model="mntLiquidity2"   type="number" name="textfield"   placeholder="Please input liquidity MNT value"  onblur="checkna()">
+                <input class="inputshow"  v-bind:readonly ="inputEnable" v-model="mntLiquidity2"   type="number" name="textfield"   placeholder="Please input liquidity MNT value"  onblur="checkna()">
                 <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
               </dd>
             </dl>
@@ -60,7 +60,7 @@
             <dl>
               <dt>USDT</dt>
               <dd>
-                <input class="inputshow"  v-model="usdtLiquidity2" type="number" name="textfield"  placeholder="Please input liquidity USDT value"  onblur="checkna()" >
+                <input class="inputshow"   v-bind:readonly ="inputEnable" v-model="usdtLiquidity2" type="number" name="textfield"  placeholder="Please input liquidity USDT value"  onblur="checkna()" >
                 <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>MNT</div>
               </dd>
             </dl>
@@ -76,7 +76,7 @@
             <dl>
               <dt>LP</dt>
               <dd>
-                <input class="inputshow" v-model="lpRemove2"   type="number"  name="textfield"   placeholder="Please input remove lp value"  onblur="checkna()" >
+                <input class="inputshow"   v-bind:readonly ="inputEnable" v-model="lpRemove2"   type="number"  name="textfield"   placeholder="Please input remove lp value"  onblur="checkna()" >
                 <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
               </dd>
             </dl>
@@ -287,6 +287,7 @@ export default {
       minPrice:0,
       maxPrice:0,
       flutterRefresh:true,
+      inputEnable:true,
 
     };
   },
@@ -1037,6 +1038,8 @@ export default {
         }
         this.mntSwapMax=this.calculationPrice(this.usdt,0);
         this.usdtSwapMax=this.calculationPrice(this.mnt,1);
+        this.inputEnable =false;
+        //this.statusInfo='inputEnable=true';
         //this.statusInfo =this.mntLiquidityMax.toString() +" "+this.usdtLiquidityMax.toString();
         //this.statusInfo=`${this.mntSwapMax}  ${this.usdtSwapMax} `;
       }

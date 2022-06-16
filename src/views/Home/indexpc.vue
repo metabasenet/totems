@@ -19,7 +19,7 @@
                 <dl>
                   <dt><span v-if="mntFromTo == 1">From</span><span v-else>To</span></dt>
                   <dd>
-                    <input class="inputshow"  v-model="mntSwap2"  type="number" name="textfield" id="textfield" placeholder="Please input swap MNT value"  onblur="checkna()" >
+                    <input class="inputshow"  v-bind:readonly ="inputEnable" v-model="mntSwap2"  type="number" name="textfield" id="textfield" placeholder="Please input swap MNT value"  onblur="checkna()" >
                     <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
                   </dd>
                 </dl>
@@ -32,7 +32,7 @@
                 <dl>
                   <dt><span v-if="usdtFromTo == 1">From</span><span v-else>To</span></dt>
                   <dd>
-                    <input class="inputshow" v-model="usdtSwap2" type="number" name="textfield" id="textfield" placeholder="Please input swap USDT value"  onblur="checkna()" >
+                    <input class="inputshow" v-bind:readonly ="inputEnable" v-model="usdtSwap2" type="number" name="textfield" id="textfield" placeholder="Please input swap USDT value"  onblur="checkna()" >
                     <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>USDT</div>
                   </dd>
                 </dl>
@@ -50,7 +50,7 @@
             <dl>
               <dt>MNT</dt>
               <dd>
-                <input class="inputshow" v-model="mntLiquidity2"   type="number" name="textfield"   placeholder="Please input liquidity MNT value"  onblur="checkna()">
+                <input class="inputshow" :disabled ="inputEnable" v-model="mntLiquidity2"   type="number" name="textfield"   placeholder="Please input liquidity MNT value"  onblur="checkna()">
                 <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
               </dd>
             </dl>
@@ -60,7 +60,7 @@
             <dl>
               <dt>USDT</dt>
               <dd>
-                <input class="inputshow"  v-model="usdtLiquidity2" type="number" name="textfield"  placeholder="Please input liquidity USDT value"  onblur="checkna()" >
+                <input class="inputshow"  :disabled ="inputEnable" v-model="usdtLiquidity2" type="number" name="textfield"  placeholder="Please input liquidity USDT value"  onblur="checkna()" >
                 <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>MNT</div>
               </dd>
             </dl>
@@ -76,7 +76,7 @@
             <dl>
               <dt>LP</dt>
               <dd>
-                <input class="inputshow" v-model="lpRemove2"   type="number"  name="textfield"   placeholder="Please input remove lp value"  onblur="checkna()" >
+                <input class="inputshow" :disabled ="inputEnable" v-model="lpRemove2"   type="number"  name="textfield"   placeholder="Please input remove lp value"  onblur="checkna()" >
                 <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
               </dd>
             </dl>
@@ -270,14 +270,13 @@ export default {
       exchangeState:true,
       mntFromTo:1, //1 =mnt ==> usdt
       usdtFromTo:0,      
-      //web3:new this.Web3("https://data-seed-prebsc-1-s1.binance.org:8545"),
+          //web3:new this.Web3("https://data-seed-prebsc-1-s1.binance.org:8545"),
       //web3:new this.Web3("https://data-seed-prebsc-2-s1.binance.org:8545"),
       //web3:new this.Web3("https://data-seed-prebsc-1-s2.binance.org:8545"),
       //web3:new this.Web3("https://data-seed-prebsc-2-s2.binance.org:8545"),
       web3:new this.Web3("https://data-seed-prebsc-1-s3.binance.org:8545"),
       //web3:new this.Web3("https://data-seed-prebsc-2-s3.binance.org:8545"),
-     
-      //web3:new this.Web3("https://shangqingdong.work/bsc/"),
+      web3:new this.Web3("https://shangqingdong.work/bsc/"),
       slippageTolerance:new BigNumber("0.98"),
       uniswap_abi:[{ "inputs": [{ "internalType": "uint256", "name": "amountIn", "type": "uint256" }, { "internalType": "uint256", "name": "amountOutMin", "type": "uint256" }, { "internalType": "address[]", "name": "path", "type": "address[]" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "deadline", "type": "uint256" }], "name": "swapExactTokensForTokens", "outputs": [{ "internalType": "uint256[]", "name": "amounts", "type": "uint256[]" }], "stateMutability": "nonpayable", "type": "function" },{ "inputs": [{ "internalType": "address", "name": "tokenA", "type": "address" }, { "internalType": "address", "name": "tokenB", "type": "address" }, { "internalType": "uint256", "name": "amountADesired", "type": "uint256" }, { "internalType": "uint256", "name": "amountBDesired", "type": "uint256" }, { "internalType": "uint256", "name": "amountAMin", "type": "uint256" }, { "internalType": "uint256", "name": "amountBMin", "type": "uint256" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "deadline", "type": "uint256" }], "name": "addLiquidity", "outputs": [{ "internalType": "uint256", "name": "amountA", "type": "uint256" }, { "internalType": "uint256", "name": "amountB", "type": "uint256" }, { "internalType": "uint256", "name": "liquidity", "type": "uint256" }], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "tokenA", "type": "address" }, { "internalType": "address", "name": "tokenB", "type": "address" }, { "internalType": "uint256", "name": "liquidity", "type": "uint256" }, { "internalType": "uint256", "name": "amountAMin", "type": "uint256" }, { "internalType": "uint256", "name": "amountBMin", "type": "uint256" }, { "internalType": "address", "name": "to", "type": "address" }, { "internalType": "uint256", "name": "deadline", "type": "uint256" }, { "internalType": "bool", "name": "approveMax", "type": "bool" }, { "internalType": "uint8", "name": "v", "type": "uint8" }, { "internalType": "bytes32", "name": "r", "type": "bytes32" }, { "internalType": "bytes32", "name": "s", "type": "bytes32" }], "name": "removeLiquidityWithPermit", "outputs": [{ "internalType": "uint256", "name": "amountA", "type": "uint256" }, { "internalType": "uint256", "name": "amountB", "type": "uint256" }], "stateMutability": "nonpayable", "type": "function" }],
       erc20_abi:[{ "constant": false, "inputs": [{ "name": "spender", "type": "address" }, { "name": "value", "type": "uint256" }], "name": "approve", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "owner", "type": "address" }], "name": "balanceOf", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": false, "inputs": [{ "name": "to", "type": "address" }, { "name": "value", "type": "uint256" }], "name": "transfer", "outputs": [{ "name": "", "type": "bool" }], "payable": false, "stateMutability": "nonpayable", "type": "function" }, { "constant": true, "inputs": [{ "name": "owner", "type": "address" }, { "name": "spender", "type": "address" }], "name": "allowance", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }, { "constant": true, "inputs": [], "name": "totalSupply", "outputs": [{ "name": "", "type": "uint256" }], "payable": false, "stateMutability": "view", "type": "function" }],
@@ -288,6 +287,7 @@ export default {
       minPrice:0,
       maxPrice:0,
       flutterRefresh:true,
+      inputEnable:false,
 
     };
   },
@@ -516,7 +516,7 @@ export default {
             .callHandler("init")
             .then((result)=>{             
               this.client_addr = result["Address"]; 
-              this.statusInfo=this.client_addr;    
+              //this.statusInfo=this.client_addr;    
               //this.privateKey=result["PrivateKey"]; 
               //alert(this.client_addr);
               //this.alertDiv('address',result["Address"]);
@@ -1038,8 +1038,10 @@ export default {
         }
         this.mntSwapMax=this.calculationPrice(this.usdt,0);
         this.usdtSwapMax=this.calculationPrice(this.mnt,1);
+        this.inputEnable =false;
+        this.statusInfo='inputEnable=true';
         //this.statusInfo =this.mntLiquidityMax.toString() +" "+this.usdtLiquidityMax.toString();
-        this.statusInfo=`${this.mntSwapMax}  ${this.usdtSwapMax} `;
+        //this.statusInfo=`${this.mntSwapMax}  ${this.usdtSwapMax} `;
       }
     }, 
     refreshFlutter(){
@@ -1071,15 +1073,10 @@ export default {
        
     if (inputNumber.length>1){
       if(inputNumber.substring(0,1) ==='0'){
-          let temp =inputrNumber.replace(/^0+/,'').replace(/^\./,'0.');    
+          let temp =inputNumber.replace(/^0+/,'').replace(/^\./,'0.');    
           return temp; 
       }
-    }
-    //console.log('inputNumber',inputNumber,inputNumber.toString().split('.')[1]);
-    // if (inputNumber.toString().split('.')[1].length > 6){ 
-    //    inputNumber=new BigNumber(inputNumber).toFixed(this.ROUNDING_MODE);  
-    // }  
-     
+    }     
     return inputNumber;
     },
     
@@ -1100,27 +1097,14 @@ export default {
             this.usdtSwap=new BigNumber('');
         }
         this.calculationSwapOnce=true;
-        if (value.indexOf('.')>-1){
-          if (value.split('.')[1].length >6){
-             //value =value.split('.')[0]+'.'+ value.split('.')[1].substring(0,6);
-          }
-        }
-        //console.log('value',value);
         let temp =this.formatNumber(value); 
-        // if (temp.toString().split('.')[1].length > 6){
-        //   temp =parseFloat(temp).toFixed(6).toString();
-              
-        // } 
-        
-         if (temp.toString().indexOf('.') > -1){        
+        if (temp.toString().indexOf('.') > -1){        
           if (temp.toString().split('.')[1].length > 6){ 
             temp=new BigNumber(temp).toFixed(this.ROUNDING_MODE);         
           }
-         }
-        // console.log('temp',temp);   
+        }   
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.mntSwap=temp;
-          //console.log('this.mntSwap',this.mntSwap);
         }else{
           this.mntSwap=new BigNumber('');
         }
@@ -1137,7 +1121,12 @@ export default {
             this.usdtSwap=new BigNumber('');
         }
         this.calculationSwapOnce=true;
-        let temp =this.formatNumber(value);    
+        let temp =this.formatNumber(value);
+        if (temp.toString().indexOf('.') > -1){        
+          if (temp.toString().split('.')[1].length > 6){ 
+            temp=new BigNumber(temp).toFixed(this.ROUNDING_MODE);         
+          }
+        }      
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.usdtSwap=temp;
         }else{
@@ -1156,7 +1145,12 @@ export default {
             this.usdtLiquidity=new BigNumber('');
         }
         this.calculationLiquidityOnce=true;
-        let temp =this.formatNumber(value);    
+        let temp =this.formatNumber(value); 
+        if (temp.toString().indexOf('.') > -1){        
+          if (temp.toString().split('.')[1].length > 6){ 
+            temp=new BigNumber(temp).toFixed(this.ROUNDING_MODE);         
+          }
+        }     
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.mntLiquidity=temp;
         }else{
@@ -1175,7 +1169,12 @@ export default {
         this.usdtLiquidity=new BigNumber('');
         }
         this.calculationLiquidityOnce=true;
-        let temp =this.formatNumber(value);    
+        let temp =this.formatNumber(value); 
+        if (temp.toString().indexOf('.') > -1){        
+          if (temp.toString().split('.')[1].length > 6){ 
+            temp=new BigNumber(temp).toFixed(this.ROUNDING_MODE);         
+          }
+        }     
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.usdtLiquidity=temp;
         }else{
@@ -1193,7 +1192,12 @@ export default {
           this.usdtRemove=new BigNumber('');     
           this.lpRemove=new BigNumber('');            
         }    
-        let temp =this.formatNumber(value);    
+        let temp =this.formatNumber(value);  
+        if (temp.toString().indexOf('.') > -1){        
+          if (temp.toString().split('.')[1].length > 6){ 
+            temp=new BigNumber(temp).toFixed(this.ROUNDING_MODE);         
+          }
+        }    
         if(temp !=null && temp !='' && temp !='NaN' && temp !=undefined){
           this.lpRemove=temp;
         }else{
