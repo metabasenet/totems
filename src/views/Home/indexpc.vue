@@ -1039,7 +1039,8 @@ export default {
         this.mntSwapMax=this.calculationPrice(this.usdt,0);
         this.usdtSwapMax=this.calculationPrice(this.mnt,1);
         this.inputEnable =false;
-        this.statusInfo='inputEnable=true';
+        //this.statusInfo='inputEnable=true';
+        this.statusInfo =this._reserve0 + "  "+ this._reserve1;
         //this.statusInfo =this.mntLiquidityMax.toString() +" "+this.usdtLiquidityMax.toString();
         //this.statusInfo=`${this.mntSwapMax}  ${this.usdtSwapMax} `;
       }
@@ -1255,6 +1256,14 @@ export default {
         let numerator=new BigNumber(amountInWithFee)* this._reserve1;
         let denominator=(new BigNumber( this._reserve0) * 1000 ) +amountInWithFee;
         this.usdtSwap= new BigNumber(numerator/denominator).toFixed(this.ROUNDING_MODE); 
+        console.log('this._reserve0',this._reserve0.toNumber());
+        console.log('this._reserve1',this._reserve1.toNumber());
+        console.log('val.mntSwap',val.mntSwap);
+        console.log('amountInWithFee',amountInWithFee);
+        console.log('numerator',numerator);
+        console.log('denominator',denominator);
+        console.log('this.usdtSwap',this.usdtSwap);
+        
       }else{
         this.calculationSwapOnce=true;
       } 

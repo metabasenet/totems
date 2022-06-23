@@ -1042,6 +1042,7 @@ export default {
         //this.statusInfo='inputEnable=true';
         //this.statusInfo =this.mntLiquidityMax.toString() +" "+this.usdtLiquidityMax.toString();
         //this.statusInfo=`${this.mntSwapMax}  ${this.usdtSwapMax} `;
+        //this.statusInfo =this._reserve0 + "               "+ this._reserve1;
       }
     }, 
     refreshFlutter(){
