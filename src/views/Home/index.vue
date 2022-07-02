@@ -508,7 +508,8 @@ export default {
       });   
     },
     
-     getFlatterInfo() {   
+     getFlatterInfo() { 
+      //don't need   
       window.addEventListener(
         "flutterInAppWebViewPlatformReady",
         (event) => {
@@ -516,6 +517,7 @@ export default {
             .callHandler("init")
             .then((result)=>{             
               this.client_addr = result["Address"]; 
+             // alert(this.client_addr);
               //this.statusInfo=this.client_addr;    
               //this.privateKey=result["PrivateKey"]; 
               //alert(this.client_addr);
@@ -526,6 +528,11 @@ export default {
             });
         }
       );
+      window.addEventListener("Init", (event) => {           
+       this.client_addr =event.detail.Address; 
+           //   alert(this.client_addr);
+              this.$options.methods.init.call(this);
+        });
       window.addEventListener("Transfer", (event) => {           
             //alert(JSON.stringify(event.detail));
             //{ran:'20220507180900789',privateKey:'xxxxxxxxxxxxx',token: '0xb7f04aefa2612a8321618af162fe8d90aa087e45',addr:'0x87391240190aB94F43a1365bBDe1610D6b61E2B5',amount:123}
@@ -1060,7 +1067,9 @@ export default {
       this.getAddress(this.lp_addr, this.usdt_addr, 5);
       this.getTotalSupply();
       this.getChartData(15);
-      this.getBNB();  
+      this.getBNB(); 
+      this.mntApprove="1";     
+      this.usdtApprove="1";         
       this.$options.methods.getApproveState.call(this,this.mnt_addr , 1);
       this.$options.methods.getApproveState.call(this,this.usdt_addr, 0);
       this.calculationSwapAndLiquidityMax();
@@ -1082,7 +1091,8 @@ export default {
     },
     
   },
-  mounted() {   
+  mounted() {
+    
     this.getFlatterInfo();  
     //this.init();
     },

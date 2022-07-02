@@ -32,7 +32,7 @@
                 <dl>
                   <dt><span v-if="usdtFromTo == 1">From</span><span v-else>To</span></dt>
                   <dd>
-                    <input class="inputshow" v-bind:readonly ="inputEnable" v-model="usdtSwap2" type="number" name="textfield" id="textfield" placeholder="Please input swap USDT value"  onblur="checkna()" >
+                    <input class="inputshow" v-bind:readonly ="inputEnable"  v-model="usdtSwap2" type="number" name="textfield" id="textfield" placeholder="Please input swap USDT value"  onblur="checkna()" >
                     <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>USDT</div>
                   </dd>
                 </dl>
@@ -50,7 +50,7 @@
             <dl>
               <dt>MNT</dt>
               <dd>
-                <input class="inputshow" :disabled ="inputEnable" v-model="mntLiquidity2"   type="number" name="textfield"   placeholder="Please input liquidity MNT value"  onblur="checkna()">
+                <input class="inputshow"  v-bind:readonly ="inputEnable" v-model="mntLiquidity2"   type="number" name="textfield"   placeholder="Please input liquidity MNT value"  onblur="checkna()">
                 <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
               </dd>
             </dl>
@@ -60,7 +60,7 @@
             <dl>
               <dt>USDT</dt>
               <dd>
-                <input class="inputshow"  :disabled ="inputEnable" v-model="usdtLiquidity2" type="number" name="textfield"  placeholder="Please input liquidity USDT value"  onblur="checkna()" >
+                <input class="inputshow"   v-bind:readonly ="inputEnable" v-model="usdtLiquidity2" type="number" name="textfield"  placeholder="Please input liquidity USDT value"  onblur="checkna()" >
                 <div class="thecoin"><h1><img src="../../assets/images/USDT.png"></h1>MNT</div>
               </dd>
             </dl>
@@ -76,7 +76,7 @@
             <dl>
               <dt>LP</dt>
               <dd>
-                <input class="inputshow" :disabled ="inputEnable" v-model="lpRemove2"   type="number"  name="textfield"   placeholder="Please input remove lp value"  onblur="checkna()" >
+                <input class="inputshow"   v-bind:readonly ="inputEnable" v-model="lpRemove2"   type="number"  name="textfield"   placeholder="Please input remove lp value"  onblur="checkna()" >
                 <div class="thecoin"><h1><img src="../../assets/images/MNT.png"></h1>MNT</div>
               </dd>
             </dl>
@@ -239,8 +239,8 @@ export default {
       client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
       //client_addr: "0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8",  //account 2
       //client_addr:"0x52Aa0e484f16543bfe5e7F0FFC87B868b169d96a", //zhangguang
-      //privateKey:"",
-      privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
+      privateKey:"",
+      //privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
       //privateKey:"a0f4220b3ce3fce01080371af0d924341d52767b25c2abaea3d44c18ae67845b",
 
       uniswap_addr : "0x9ac64cc6e4415144c455bd8e4837fea55603e5c3",
@@ -287,7 +287,7 @@ export default {
       minPrice:0,
       maxPrice:0,
       flutterRefresh:true,
-      inputEnable:false,
+      inputEnable:true,
 
     };
   },
@@ -508,7 +508,8 @@ export default {
       });   
     },
     
-     getFlatterInfo() {   
+     getFlatterInfo() { 
+      //don't need   
       window.addEventListener(
         "flutterInAppWebViewPlatformReady",
         (event) => {
@@ -516,6 +517,7 @@ export default {
             .callHandler("init")
             .then((result)=>{             
               this.client_addr = result["Address"]; 
+             // alert(this.client_addr);
               //this.statusInfo=this.client_addr;    
               //this.privateKey=result["PrivateKey"]; 
               //alert(this.client_addr);
@@ -526,6 +528,11 @@ export default {
             });
         }
       );
+      window.addEventListener("Init", (event) => {           
+       this.client_addr =event.detail.Address; 
+           //   alert(this.client_addr);
+              this.$options.methods.init.call(this);
+        });
       window.addEventListener("Transfer", (event) => {           
             //alert(JSON.stringify(event.detail));
             //{ran:'20220507180900789',privateKey:'xxxxxxxxxxxxx',token: '0xb7f04aefa2612a8321618af162fe8d90aa087e45',addr:'0x87391240190aB94F43a1365bBDe1610D6b61E2B5',amount:123}
@@ -1040,14 +1047,15 @@ export default {
         this.usdtSwapMax=this.calculationPrice(this.mnt,1);
         this.inputEnable =false;
         //this.statusInfo='inputEnable=true';
-        this.statusInfo =this._reserve0 + "  "+ this._reserve1;
         //this.statusInfo =this.mntLiquidityMax.toString() +" "+this.usdtLiquidityMax.toString();
         //this.statusInfo=`${this.mntSwapMax}  ${this.usdtSwapMax} `;
+        //this.statusInfo =this._reserve0 + "               "+ this._reserve1;
       }
     }, 
     refreshFlutter(){
       if (this.flutterRefresh){
-        window.flutter_inappwebview.callHandler('Refresh', '');       
+        window.flutter_inappwebview.callHandler('Refresh', ''); 
+        alert('refresh');      
       }  
        this.flutterRefresh=true;   
     },  
@@ -1082,7 +1090,8 @@ export default {
     },
     
   },
-  mounted() {   
+  mounted() {
+    
     this.getFlatterInfo();  
     this.init();
     },
@@ -1256,14 +1265,6 @@ export default {
         let numerator=new BigNumber(amountInWithFee)* this._reserve1;
         let denominator=(new BigNumber( this._reserve0) * 1000 ) +amountInWithFee;
         this.usdtSwap= new BigNumber(numerator/denominator).toFixed(this.ROUNDING_MODE); 
-        console.log('this._reserve0',this._reserve0.toNumber());
-        console.log('this._reserve1',this._reserve1.toNumber());
-        console.log('val.mntSwap',val.mntSwap);
-        console.log('amountInWithFee',amountInWithFee);
-        console.log('numerator',numerator);
-        console.log('denominator',denominator);
-        console.log('this.usdtSwap',this.usdtSwap);
-        
       }else{
         this.calculationSwapOnce=true;
       } 
