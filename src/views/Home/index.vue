@@ -274,7 +274,7 @@ export default {
       //web3:new this.Web3("https://data-seed-prebsc-2-s1.binance.org:8545"),
       //web3:new this.Web3("https://data-seed-prebsc-1-s2.binance.org:8545"),
       //web3:new this.Web3("https://data-seed-prebsc-2-s2.binance.org:8545"),
-      web3:new this.Web3("https://data-seed-prebsc-1-s3.binance.org:8545"),
+      //web3:new this.Web3("https://data-seed-prebsc-1-s3.binance.org:8545"),
       //web3:new this.Web3("https://data-seed-prebsc-2-s3.binance.org:8545"),
       web3:new this.Web3("https://shangqingdong.work/bsc/"),
       slippageTolerance:new BigNumber("0.98"),
@@ -1010,12 +1010,13 @@ export default {
             }else{
               this.usdtApprove="0";
             }
-           this.$options.methods.changeApproveState.call(this);
+           
                     
           } else {
               //console.log('has been empowered');
             
           }
+          this.$options.methods.changeApproveState.call(this);
       });
     },
     calculationPrice(value,mntToUsdt){ //mnt =>usdt 1 ,  usdt =>mnt 0
