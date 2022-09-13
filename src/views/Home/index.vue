@@ -231,23 +231,29 @@ export default {
       mntApprove:"1",  //1  mnt approved success
       usdtApprove:"1", //1  usdt approved success
       approveInfo:"",// approve info 
-      mnt_addr: "0x450af0a7c8372eee72dd2e4833d9aac4928c151f",
-      usdt_addr: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",
-      lp_addr: "0x82260d3f8c98e90a4ec0dcf709e2ad8f592ea941", 
-      client_addr:"",
+      //mnt_addr: "0x450af0a7c8372eee72dd2e4833d9aac4928c151f",
+      mnt_addr:"0xeE726C4e6DEcA848fdFEA0e0dCb3A8d4f343E047",
+      //usdt_addr: "0xb7f04aefa2612a8321618af162fe8d90aa087e45",
+      usdt_addr:"0x55d398326f99059ff775485246999027b3197955",
+      //lp_addr: "0x82260d3f8c98e90a4ec0dcf709e2ad8f592ea941", 
+      lp_addr:"0x72E5080Ea8b8878A78f0C83e375c2b86d4D92Bc1",
+      //client_addr:"",
 
-      //client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
+      client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
       //client_addr: "0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8",  //account 2
       //client_addr:"0x52Aa0e484f16543bfe5e7F0FFC87B868b169d96a", //zhangguang
       privateKey:"",
       //privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
       //privateKey:"a0f4220b3ce3fce01080371af0d924341d52767b25c2abaea3d44c18ae67845b",
 
-      uniswap_addr : "0x9ac64cc6e4415144c455bd8e4837fea55603e5c3",
+      //uniswap_addr : "0x9ac64cc6e4415144c455bd8e4837fea55603e5c3",
+      uniswap_addr:"0x10ED43C718714eb63d5aA57B78B54704E256024E",
 
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
+      //url: "https://data-seed-prebsc-1-s1.binance.org:8545",
      
-      DOMAIN_SEPARATOR :"0xd010526b15a49fbab086ffd91b78ef60d6bdb7037f5d98ba83de33b8fb33c43c",
+      //DOMAIN_SEPARATOR :"0xd010526b15a49fbab086ffd91b78ef60d6bdb7037f5d98ba83de33b8fb33c43c",
+      //PERMIT_TYPEHASH :"0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9",
+      DOMAIN_SEPARATOR :"0x03303597713a890790cf54bed6a95122d448aaf7e68ebd6ec73e2a066a4a3f5f",
       PERMIT_TYPEHASH :"0x6e71edae12b1b97f4d1f60370fef10105fa2faae0126114a169c64845d6126c9",
       password:"",
       passwordInput:"",
