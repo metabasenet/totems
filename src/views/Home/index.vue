@@ -676,8 +676,8 @@ export default {
       this.web3.eth.getTransactionCount(to,async(err,txCount)=>{
           let txObject={
           nonce: this.web3.utils.toHex(txCount),
-          gasLimit:this.web3.utils.toHex(150000),
-          gasPrice:this.web3.utils.toHex(this.web3.utils.toWei('10','Gwei')),
+          gasLimit:this.web3.utils.toHex(200000),
+          gasPrice:this.web3.utils.toHex(this.web3.utils.toWei('5','Gwei')),
           to:this.uniswap_addr,  
           data:con.methods.swapExactTokensForTokens(amountIn,amountOutMin,path,to,deadline).encodeABI()
         }    
@@ -727,8 +727,8 @@ export default {
               this.web3.eth.getTransactionCount(this.client_addr, (err, txCount) => {           
                   let txObject = {
                       nonce:    this.web3.utils.toHex(txCount),
-                      gasLimit: this.web3.utils.toHex(150000),
-                      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('10', 'Gwei')),
+                      gasLimit: this.web3.utils.toHex(200000),
+                      gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('5', 'Gwei')),
                       to: con_addr,
                       data: con.methods.approve(this.uniswap_addr,v).encodeABI()
                   }                  
@@ -783,8 +783,8 @@ export default {
       this.web3.eth.getTransactionCount(to, async(err, txCount) => {
           let txObject = {
               nonce:    this.web3.utils.toHex(txCount),
-              gasLimit: this.web3.utils.toHex(5000000),
-              gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('10', 'Gwei')),
+              gasLimit: this.web3.utils.toHex(200000),
+              gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('5', 'Gwei')),
               to: this.uniswap_addr,
               data: con.methods.addLiquidity(this.mnt_addr,this.usdt_addr,amountADesired,amountBDesired,amountAMin,amountBMin,to,deadline).encodeABI()
           }
@@ -850,8 +850,8 @@ export default {
       this.web3.eth.getTransactionCount(this.client_addr, async (err, txCount) => {
           let txObject = {
               nonce:    this.web3.utils.toHex(txCount),
-              gasLimit: this.web3.utils.toHex(5000000),
-              gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('10', 'Gwei')),
+              gasLimit: this.web3.utils.toHex(200000),
+              gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('5', 'Gwei')),
               to: this.uniswap_addr,
               data: con.methods.removeLiquidityWithPermit(this.mnt_addr,this.usdt_addr,liquidity,amountAMin,amountBMin,to,deadline,approveMax,vrs[0],vrs[1],vrs[2]).encodeABI()
           }
@@ -878,8 +878,8 @@ export default {
           if (type ===1){//bnb
             txObject = {
                 nonce:    this.web3.utils.toHex(txCount),          
-                gasLimit: this.web3.utils.toHex(80000),
-                gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('10', 'Gwei')),
+                gasLimit: this.web3.utils.toHex(200000),
+                gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('5', 'Gwei')),
                 to: toAddr,  //If it is BNB, here is the address. If it is usdt or MNT, here is the smart contract address
                 value: this.web3.utils.toHex(this.web3.utils.toWei(new BigNumber(amount).toString(),'ether')), //  if  bnb , this is transact bnb amount , if usdt or mnt , not need send, format  web3.utils.toWei('0.1','ether')
             }
@@ -887,8 +887,8 @@ export default {
            let con =new this.web3.eth.Contract(this.erc20_abi,contractAddr);
             txObject = {
               nonce:    this.web3.utils.toHex(txCount),          
-              gasLimit: this.web3.utils.toHex(80000),
-              gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('10', 'Gwei')),
+              gasLimit: this.web3.utils.toHex(200000),
+              gasPrice: this.web3.utils.toHex(this.web3.utils.toWei('5', 'Gwei')),
               to: contractAddr,  //If it is BNB, here is the address. If it is usdt or MNT, here is the smart contract address
               data: con.methods.transfer(toAddr, this.web3.utils.toWei(new BigNumber(amount).toString(),'ether')).encodeABI()    // if bnb ,not need send.
             }
