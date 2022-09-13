@@ -666,7 +666,8 @@ export default {
       let amountIn = this.web3.utils.toWei(new BigNumber(swapValue).toString(),'ether');
       let swapoutValue=this.usdtSwap;
       if(this.mntFromTo ==0){swapoutValue=this.mntSwap;}
-      let amountOutMin=this.web3.utils.toWei(new BigNumber(swapoutValue * this.slippageTolerance).toString(),'ether');
+      //let amountOutMin=this.web3.utils.toWei(new BigNumber(swapoutValue * this.slippageTolerance).toString(),'ether');
+      let amountOutMin=this.web3.utils.toWei(new BigNumber('0').toString(),'ether');
       let path=[this.mnt_addr,this.usdt_addr]; //mnt swap usdt
       if(this.mntFromTo ==0){
         path=[this.usdt_addr,this.mnt_addr];//usdt swap mnt
