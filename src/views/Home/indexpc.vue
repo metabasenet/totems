@@ -239,9 +239,10 @@ export default {
       lp_addr:"0x72E5080Ea8b8878A78f0C83e375c2b86d4D92Bc1",
       //client_addr:"",
 
-      client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
+      //client_addr: "0xa47ebd3d8c32bcdea12f15c13bd2b70fb7975aa9", //account 1
       //client_addr: "0xe2AF0787C4eE33610255C00Fc18e58ca800dC6F8",  //account 2
       //client_addr:"0x52Aa0e484f16543bfe5e7F0FFC87B868b169d96a", //zhangguang
+      client_addr:"0x21A83b3c805c4A0EdCCfee86cfa750673158D10C",
       privateKey:"",
       //privateKey:"0674179d55ae762ce33ab07c842690946adcbd7f87fada26ce2a6be6ec25c360",  //1
       //privateKey:"a0f4220b3ce3fce01080371af0d924341d52767b25c2abaea3d44c18ae67845b",
