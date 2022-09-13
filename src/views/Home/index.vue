@@ -295,6 +295,8 @@ export default {
       maxPrice:0,
       flutterRefresh:true,
       inputEnable:true,
+      networkId:56,
+      chainId:56,
 
     };
   },
@@ -679,7 +681,7 @@ export default {
           to:this.uniswap_addr,  
           data:con.methods.swapExactTokensForTokens(amountIn,amountOutMin,path,to,deadline).encodeABI()
         }    
-        let BSC_MAIN=Common.forCustomChain('mainnet',{name:'bnb',networkId:97,chainId:97},'petersburg');       
+        let BSC_MAIN=Common.forCustomChain('mainnet',{name:'bnb',networkId:this.networkId,chainId:this.chainId},'petersburg');       
         let tx=new Tx(txObject,{common:BSC_MAIN});  
         tx.sign(privKey);
         let serializedTx=tx.serialize();       
@@ -730,7 +732,7 @@ export default {
                       to: con_addr,
                       data: con.methods.approve(this.uniswap_addr,v).encodeABI()
                   }                  
-                  let BSC_MAIN = Common.forCustomChain('mainnet', {name: 'bnb', networkId: 97, chainId: 97}, 'petersburg');
+                  let BSC_MAIN = Common.forCustomChain('mainnet', {name: 'bnb', networkId:this.networkId,chainId:this.chainId}, 'petersburg');
                   let tx = new Tx(txObject,{common: BSC_MAIN});
             
                   tx.sign(privKey);
@@ -786,7 +788,7 @@ export default {
               to: this.uniswap_addr,
               data: con.methods.addLiquidity(this.mnt_addr,this.usdt_addr,amountADesired,amountBDesired,amountAMin,amountBMin,to,deadline).encodeABI()
           }
-          let BSC_MAIN = Common.forCustomChain('mainnet', {name: 'bnb', networkId: 97, chainId: 97}, 'petersburg');
+          let BSC_MAIN = Common.forCustomChain('mainnet', {name: 'bnb',networkId:this.networkId,chainId:this.chainId}, 'petersburg');
           let tx = new Tx(txObject,{common: BSC_MAIN});
           tx.sign(privKey);
           let serializedTx = tx.serialize();
@@ -853,7 +855,7 @@ export default {
               to: this.uniswap_addr,
               data: con.methods.removeLiquidityWithPermit(this.mnt_addr,this.usdt_addr,liquidity,amountAMin,amountBMin,to,deadline,approveMax,vrs[0],vrs[1],vrs[2]).encodeABI()
           }
-          let BSC_MAIN = Common.forCustomChain('mainnet', {name: 'bnb', networkId: 97, chainId: 97}, 'petersburg');
+          let BSC_MAIN = Common.forCustomChain('mainnet', {name: 'bnb', networkId:this.networkId,chainId:this.chainId}, 'petersburg');
           let tx = new Tx(txObject,{common: BSC_MAIN});
           tx.sign(privKey);
           let serializedTx = tx.serialize();
@@ -892,7 +894,7 @@ export default {
             }
           }
           //56
-          const BSC_MAIN = Common.forCustomChain('mainnet', {name: 'bnb', networkId: 97, chainId: 97}, 'petersburg');
+          const BSC_MAIN = Common.forCustomChain('mainnet', {name: 'bnb', networkId:this.networkId,chainId:this.chainId}, 'petersburg');
           const tx = new Tx(txObject,{common: BSC_MAIN});
           let privKey = new Buffer.from(this.privateKey, 'hex');
           tx.sign(privKey);
