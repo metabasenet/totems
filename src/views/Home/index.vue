@@ -144,6 +144,9 @@
         <label for="option-2" class="option option-1" v-if="usdtApprove === '0'">
         <span @click ="openConfirm('5')">Approve USDT</span>
         </label>
+        <label for="option-3" class="option option-1" v-if="lpApprove === '0'">
+        <span @click ="openConfirm('6')">Approve LP</span>
+        </label>
         </div>
         </div>
         <div class="both24"></div>
@@ -230,6 +233,7 @@ export default {
       usdtRemove:new BigNumber(""),
       mntApprove:"1",  //1  mnt approved success
       usdtApprove:"1", //1  usdt approved success
+      lpApprove:"1",//1  lp approved success
       approveInfo:"",// approve info 
       //mnt_addr: "0x450af0a7c8372eee72dd2e4833d9aac4928c151f",
       mnt_addr:"0xeE726C4e6DEcA848fdFEA0e0dCb3A8d4f343E047",
@@ -367,6 +371,9 @@ export default {
               case "5":{          
                 this.approve(this.usdt_addr, 0);           
               }
+              case "6":{          
+                this.approve(this.lp_addr, 2);           
+              }
             }
           }else{
             //alert("Please enter the correct wallet password!");
@@ -377,7 +384,7 @@ export default {
       this.password="";
       this.dialogIndex =index;
       if(index =="1" || index =="2" || index =="3"){
-         if (this.mntApprove =="0" || this.usdtApprove =="0"){
+         if (this.mntApprove ==="0" || this.usdtApprove ==="0"|| this.lpApprove ==="0"){
           this.alertDiv("alert","Please authorize before trading !");         
           return;      
         }
@@ -698,15 +705,21 @@ export default {
       });
     },
     changeApproveState(){
-      if (this.mntApprove == "0" && this.usdtApprove =="0"){
-          this.approveInfo="Please Approve MNT and USDT first!";
-        }else if(this.mntApprove == "0" && this.usdtApprove =="1"){
-          this.approveInfo="Please Approve MNT first!";
-        }else if(this.mntApprove == "1" && this.usdtApprove =="0"){
-          this.approveInfo="Please Approve USDT first!";
-        }else{
-          this.approveInfo="";
-        }
+      let approveInfo="";
+      if (this.mntApprove === "0"){
+        approveInfo = approveInfo + " Approve MNT,";
+      }
+      if (this.usdtApprove === "0"){
+        approveInfo = approveInfo + " Approve USDT,";
+      }
+      if (this.lpApprove === "0"){
+        approveInfo = approveInfo + " Approve LP,";
+      }
+      if (approveInfo.length>0){
+        approveInfo=approveInfo.substring(0,approveInfo.length-1) +" ";
+        approveInfo="Please" +approveInfo +"first!";
+      }
+      this.approveInfo=approveInfo;  
     },
     // 
     approve( con_addr,type) {
@@ -741,10 +754,12 @@ export default {
                   let raw = '0x' + serializedTx.toString('hex');
                       
                   this.web3.eth.sendSignedTransaction(raw, (err, txHash) => {              
-                      if (type ==1){
+                      if (type ===1){
                         this.mntApprove="1";
-                      }else{
+                      }else if(type ===0){
                         this.usdtApprove="1";
+                      }else{
+                        this.lpApprove ="1";
                       }
                       this.$options.methods.changeApproveState.call(this);
                   });
@@ -1015,12 +1030,14 @@ export default {
       let con = new this.web3.eth.Contract(this.erc20_abi,con_addr);
       con.methods.allowance(this.client_addr,this.uniswap_addr).call((_,ret) => {  
           let v  = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn;
-          //alert("ret " +ret);
+          alert("ret " +ret);
           if (ret < v / 2n) {
-            if (type ==1){
+            if (type ===1){
               this.mntApprove="0";
-            }else{
+            }else if(type ===0){
               this.usdtApprove="0";
+            }else{
+              this.lpApprove ="0";
             }
            
                     
@@ -1085,6 +1102,7 @@ export default {
       this.usdtApprove="1";         
       this.$options.methods.getApproveState.call(this,this.mnt_addr , 1);
       this.$options.methods.getApproveState.call(this,this.usdt_addr, 0);
+      this.$options.methods.getApproveState.call(this,this.lp_addr, 2);
       this.calculationSwapAndLiquidityMax();
       this.refreshFlutter();
     },
