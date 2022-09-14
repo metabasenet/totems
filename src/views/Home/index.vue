@@ -1030,7 +1030,7 @@ export default {
       let con = new this.web3.eth.Contract(this.erc20_abi,con_addr);
       con.methods.allowance(this.client_addr,this.uniswap_addr).call((_,ret) => {  
           let v  = 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn;
-          alert("ret " +ret);
+          //alert("ret " +ret);
           if (ret < v / 2n) {
             if (type ===1){
               this.mntApprove="0";
