@@ -945,10 +945,12 @@ export default {
       let params = {
             times:times,
       };
+ 
       //test
       //let res={ "xAxis": ["15","14","13","12","11","10","9", "8", "7", "6", "5", "4", "3","2","1"], "legend": ["MNt Price"], "series": [{ "name": "MNt Price", "data": [10, 11, 13, 16, 20, 25, 31,38,46,55,65,76,88,101,115] }] }
         let that = this
         this.$api.getUniswap(params).then(res => {     
+          
             that.legend=res.legend;
             that.xAxis=res.xAxis; 
             that.minPrice=res.minPrice;
@@ -1126,6 +1128,7 @@ export default {
     
     this.getFlatterInfo();  
     //this.init();
+    this.getChartData(15);
     },
   computed:{
     mntSwap2:{

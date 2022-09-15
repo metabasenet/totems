@@ -4,8 +4,8 @@ module.exports = {
         proxy:{
             "/api":{
                 //target:"http://119.8.55.78:7711/",
-                //target:"http://18.163.119.181:7711/",
-                target:"http://127.0.0.1:7711/",
+                target:"https://browser.metabasenet.site/api/",
+                //target:"http://127.0.0.1:7711/",
                 changeOrigin:true,
                 secure: false,
                 ws:true,
